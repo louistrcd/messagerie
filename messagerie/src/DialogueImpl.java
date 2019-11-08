@@ -1,14 +1,13 @@
-import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DialogueImpl extends UnicastRemoteObject implements Dialogue{
 
 	List<String> clients = new ArrayList<>();
+	HashMap<String, ArrayList<Message>> mailbox = new HashMap<String, ArrayList<Message>>();
 	
 	protected DialogueImpl() throws RemoteException {
 		super();
@@ -43,7 +42,7 @@ public class DialogueImpl extends UnicastRemoteObject implements Dialogue{
 
 	@Override
 	public String[] getMessages(String pseudo) throws RemoteException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
