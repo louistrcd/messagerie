@@ -20,7 +20,6 @@ public class Client {
 			try {
 				myComponent.connect(monPseudo);
 				System.out.println("Client connecté");
-				System.out.println(LocateRegistry.getRegistry(1099).lookup(monPseudo));
 				System.out.println("Do you want to disconnect? O/N");
 				Scanner r = new Scanner(System.in);
 				String answer = r.next().toUpperCase();
