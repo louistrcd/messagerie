@@ -27,7 +27,7 @@ public class Client {
 				case "O":
 					myComponent.disconnect(monPseudo);
 					System.out.println(monPseudo + " s'est déconnecté");
-					System.out.println("événtà");
+					
 				}
 			} catch (Exception e) {
 			}
