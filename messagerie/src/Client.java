@@ -16,6 +16,7 @@ public class Client {
 			Scanner reader = new Scanner(System.in);
 			System.out.println("Veuillez entrer votre pseudo ");
 			String monPseudo = reader.next();
+			reader.close();
 			try {
 				myComponent.connect(monPseudo);
 				System.out.println("Client connecté");
@@ -23,11 +24,11 @@ public class Client {
 				System.out.println("Do you want to disconnect? O/N");
 				Scanner r = new Scanner(System.in);
 				String answer = r.next().toUpperCase();
+				r.close();
 				switch (answer) {
 				case "O":
 					myComponent.disconnect(monPseudo);
 					System.out.println(monPseudo + " s'est déconnecté");
-					
 				}
 			} catch (Exception e) {
 			}
