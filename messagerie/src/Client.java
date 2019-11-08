@@ -11,24 +11,25 @@ public class Client {
 		// TODO Auto-generated method stub
 		Dialogue myComponent;
 		try {
-			//example of a RMI URL use to retrieve a remote reference 
+			// example of a RMI URL use to retrieve a remote reference
 			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
 			Scanner reader = new Scanner(System.in);
 			System.out.println("Veuillez entrer votre pseudo ");
 			String monPseudo = reader.next();
-			try{
+			try {
 				myComponent.connect(monPseudo);
 				System.out.println("Client connecté");
 				System.out.println(LocateRegistry.getRegistry(1099).lookup(monPseudo));
-				System.out.println("Do you want to disconnect? O/N" );
+				System.out.println("Do you want to disconnect? O/N");
 				Scanner r = new Scanner(System.in);
 				String answer = r.next().toUpperCase();
 				switch (answer) {
-					case "O":
-						myComponent.disconnect(monPseudo);
-						System.out.println(monPseudo + " s'est déconnecté");
+				case "O":
+					myComponent.disconnect(monPseudo);
+					System.out.println(monPseudo + " s'est déconnecté");
+					System.out.println("événtà");
 				}
-			}catch(Exception e) {
+			} catch (Exception e) {
 			}
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
