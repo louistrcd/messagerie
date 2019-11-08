@@ -2,7 +2,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 public class Client {
@@ -19,15 +18,29 @@ public class Client {
 			reader.close();
 			try {
 				myComponent.connect(monPseudo);
-				System.out.println("Client connecté");
-				System.out.println("Do you want to disconnect? O/N");
+				System.out.println("Client connected");
+				System.out.println("What do you want to do ? S : Send, R : Read, D : Disconnect, C : See clients");
 				Scanner r = new Scanner(System.in);
 				String answer = r.next().toUpperCase();
 				r.close();
 				switch (answer) {
-				case "O":
+				case "S":
+					System.out.println("Who is the recipient ?");
+					r = new Scanner(System.in);
+					String to = r.next().toUpperCase();
+					r.close();
+					System.out.println("What is the message ?");
+					r = new Scanner(System.in);
+					String message = r.next().toUpperCase();
+					r.close();
+					myComponent.sendMessage(monPseudo, to, message);
+				case "R":
+					System.out.println(myComponent.getMessages(monPseudo));
+				case "C":
+					System.out.println(myComponent.getClients());
+				case "D":
 					myComponent.disconnect(monPseudo);
-					System.out.println(monPseudo + " s'est déconnecté");
+					System.out.println(monPseudo + " disconnected");
 				}
 			} catch (Exception e) {
 			}
