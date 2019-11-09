@@ -1,21 +1,15 @@
 
 public class Message {
 	
-	private String from;
-	private String text;
+	String from;
+	String to;
+	String message;
 	
-	public Message(String from, String text) {
+	public Message(String from, String to, String message) {
+		super();
 		this.from = from;
-		this.text = text;
-		
+		this.to = to;
+		this.message = message;
 	}
 	
-	public String showMessage(){
-		String message = "Expéditeur : " + from + "\n" + text;
-		System.out.println(message);
-		return message;
-	}
-	
-	
-
 }
