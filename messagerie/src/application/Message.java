@@ -1,3 +1,4 @@
+package application;
 
 public class Message {
 	
@@ -7,7 +8,6 @@ public class Message {
 	public Message(String from, String text) {
 		this.from = from;
 		this.text = text;
-		
 	}
 	
 	public String showMessage(){
@@ -15,7 +15,6 @@ public class Message {
 		System.out.println(message);
 		return message;
 	}
-	
 	
 
 }

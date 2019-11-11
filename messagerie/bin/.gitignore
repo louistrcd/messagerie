@@ -3,5 +3,8 @@
 /DialogueImpl.class
 /Hello.class
 /HelloImpl.class
-/Server.class
 /Message.class
+/Server.class
+/GUI.fxml
+/ControllerGUI.class
+/application/

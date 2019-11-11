@@ -1,3 +1,4 @@
+package application;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -29,21 +30,32 @@ public class DialogueImpl extends UnicastRemoteObject implements Dialogue{
 	}
 
 	@Override
-	public String[] getClients() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> getClients() throws RemoteException {
+		return clients;
 	}
 
 	@Override
-	public void sendMessage(String nom, String from, String to) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public void sendMessage(String from, String to, String text) throws RemoteException {
+		Message message = new Message(from, text);	
+		if(mailbox.get(to)!=null) {
+			mailbox.get(to).add(message);
+		}else {
+			mailbox.put(to, new ArrayList<Message>());
+			mailbox.get(to).add(message);
+		}
 	}
 
 	@Override
-	public String[] getMessages(String pseudo) throws RemoteException {
-		
-		return null;
+	public List<String> getMessages(String pseudo) throws RemoteException {
+		List<String> messages = new ArrayList<String>();
+		if(mailbox.get(pseudo)==null) {
+			messages.add("No message in the mailbox");
+		}else {
+			for(Message m : mailbox.get(pseudo)) {
+				messages.add(m.showMessage());
+			}
+		}
+		return messages;
 	}
 
 }
