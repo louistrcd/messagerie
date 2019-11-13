@@ -50,6 +50,10 @@ public class ControllerGUI implements Initializable{
 	TextArea detailMessage;
 	private Timeline refreshMessages;
 	
+	public ControllerGUI() {
+		
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
@@ -57,7 +61,6 @@ public class ControllerGUI implements Initializable{
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
-		
 		refreshMessages();
 	}
 	
@@ -115,13 +118,36 @@ public class ControllerGUI implements Initializable{
 				labelPseudo.setText(pseudo.getText());
 				pseudo.setText("");
 				hboxConnect.setVisible(false);
+				Client.pseudo = pseudo.getText();
 				initListView();
 				initListMessages();
 				paneActions.setVisible(true);
+				Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
+				currentStage.setOnHidden(e->{
+					try {
+						myComponent.disconnect(labelPseudo.getText());
+					} catch (RemoteException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+				});
+				currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				    @Override
+				    public void handle(WindowEvent e) {
+				    	try {
+							myComponent.disconnect(pseudo.getText());
+							System.out.println(pseudo.getText());
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				    }
+				  });
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("You must enter a valid name");
@@ -131,18 +157,44 @@ public class ControllerGUI implements Initializable{
 	}
 	
 	public void showUsers() throws RemoteException {
+		Timeline refreshUsers;
+		ListView lv = new ListView();
+		lv.setSelectionModel(null);
+		EventHandler e = new EventHandler<ActionEvent>(){ 
+			   @Override 
+			   public void handle(ActionEvent e) { 
+					List<String> clients;
+					try {
+						lv.getItems().clear();
+						clients = myComponent.getClients();
+						for (String s : clients) {
+							lv.getItems().add(s);		
+						}
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			   } 
+			}; 
+			
+		new KeyFrame(Duration.seconds(1), e);
+		KeyFrame k = new KeyFrame(Duration.seconds(2), e);
+		refreshUsers = new Timeline(k);
+		refreshUsers.setCycleCount(Timeline.INDEFINITE);
 		Stage stage = new Stage();
 		BorderPane bp = new BorderPane();
-		ListView lv = new ListView();
-		List<String> clients = myComponent.getClients();
-		for (String s : clients) {
-			lv.getItems().add(s);		
-		}
 		bp.setCenter(lv);
 		Scene scene = new Scene(bp);
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		    @Override
+		    public void handle(WindowEvent e) {
+		    	refreshUsers.stop();
+		    }
+		  });
 		stage.show();
+		refreshUsers.play();
 	}
 	
 	public void newMessage() {
@@ -176,6 +228,15 @@ public class ControllerGUI implements Initializable{
 			detailMessage.setText("");
 			detailMessage.setVisible(false);
 		} catch (RemoteException e) {
+		}
+	}
+	
+	public void close() {
+		try {
+			myComponent.disconnect(labelPseudo.getText());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

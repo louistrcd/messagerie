@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane prefHeight="566.0" prefWidth="638.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControllerGUI">
+<BorderPane prefHeight="566.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -28,20 +28,20 @@
    <center>
       <BorderPane BorderPane.alignment="CENTER">
          <top>
-            <HBox spacing="41.0">
+            <HBox spacing="30.0">
                <children>
-                  <HBox fx:id="hboxConnect" spacing="21.0">
+                  <HBox fx:id="hboxConnect" spacing="6.0">
                      <children>
                         <TextField fx:id="pseudo" promptText="Enter your pseudo" />
                         <Button mnemonicParsing="false" onAction="#connect" text="Connect" />
                      </children>
                      <HBox.margin>
-                        <Insets left="-37.0" />
+                        <Insets left="-40.0" />
                      </HBox.margin>
                   </HBox>
                   <HBox spacing="8.0">
                      <HBox.margin>
-                        <Insets left="-34.0" top="4.0" />
+                        <Insets left="-29.0" top="4.0" />
                      </HBox.margin>
                      <children>
                         <Label fx:id="labelConnected" text="Connected as : " visible="false" />
@@ -67,7 +67,7 @@
                   <Insets bottom="11.0" top="25.0" />
                </BorderPane.margin>
                <top>
-                  <HBox spacing="120.0" BorderPane.alignment="CENTER">
+                  <HBox spacing="185.0" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="6.0" />
                      </BorderPane.margin>
@@ -98,7 +98,7 @@
       </BorderPane>
    </center>
    <left>
-      <Pane prefHeight="541.0" prefWidth="28.0" BorderPane.alignment="CENTER" />
+      <Pane prefHeight="541.0" prefWidth="16.0" BorderPane.alignment="CENTER" />
    </left>
    <right>
       <Pane prefHeight="541.0" prefWidth="28.0" BorderPane.alignment="CENTER" />

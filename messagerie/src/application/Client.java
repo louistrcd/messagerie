@@ -8,14 +8,17 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Client extends Application{
 	
 	static Dialogue myComponent;
+	public static String pseudo;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -34,12 +37,20 @@ public class Client extends Application{
 	@Override
 	public void start(Stage arg0) throws Exception {
 		// TODO Auto-generated method stub
-
+		try {
+			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
+		} catch (MalformedURLException | RemoteException | NotBoundException e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			Stage stage = new Stage();
-			Parent root = FXMLLoader.load(Client.class.getResource("GUI.fxml"));
-			Scene scene = new Scene(root);
+			FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
+			ControllerGUI controller = new ControllerGUI();
+			loader.setController(controller);
+			Scene scene = new Scene(loader.load());
 			stage.setScene(scene);
+			stage.setOnCloseRequest(e->controller.close());
 			stage.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();
