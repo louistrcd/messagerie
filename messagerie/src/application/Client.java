@@ -31,7 +31,7 @@ public class Client extends Application{
 			ControllerGUI controller = new ControllerGUI(myComponent);
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load());
-			scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
+			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
 			stage.setScene(scene);
 			stage.setOnCloseRequest(e->controller.close());
 			stage.setTitle("Messenger");

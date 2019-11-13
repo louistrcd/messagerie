@@ -172,7 +172,7 @@ public class ControllerGUI implements Initializable {
 		BorderPane bp = new BorderPane();
 		bp.setCenter(lv);
 		Scene scene = new Scene(bp);
-		scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
+		scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -193,7 +193,7 @@ public class ControllerGUI implements Initializable {
 			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText());
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load(), 500, 400);
-			scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
+			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
 			stage.setScene(scene);
 			stage.setTitle("New message");
 			stage.show();
