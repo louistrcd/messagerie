@@ -18,14 +18,8 @@ import javafx.stage.WindowEvent;
 public class Client extends Application{
 	
 	static Dialogue myComponent;
-	public static String pseudo;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-//		if (System.getSecurityManager() == null) {
-//			System.setSecurityManager(new RMISecurityManager());
-//			}
 		launch(args);
 		try {
 			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
@@ -36,7 +30,6 @@ public class Client extends Application{
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		// TODO Auto-generated method stub
 		try {
 			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
@@ -49,8 +42,10 @@ public class Client extends Application{
 			ControllerGUI controller = new ControllerGUI();
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load());
+			scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
 			stage.setScene(scene);
 			stage.setOnCloseRequest(e->controller.close());
+			stage.setTitle("Messenger");
 			stage.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();

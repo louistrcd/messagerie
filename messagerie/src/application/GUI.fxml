@@ -45,7 +45,7 @@
                      </HBox.margin>
                      <children>
                         <Label fx:id="labelConnected" text="Connected as : " visible="false" />
-                        <Label fx:id="labelPseudo" style="-fx-text-fill: green;">
+                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc; -fx-font-style: bold;">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>

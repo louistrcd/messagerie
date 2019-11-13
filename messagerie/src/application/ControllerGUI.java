@@ -1,4 +1,5 @@
 package application;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +32,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-public class ControllerGUI implements Initializable{
+public class ControllerGUI implements Initializable {
 
 	Dialogue myComponent;
 	@FXML
@@ -45,15 +46,14 @@ public class ControllerGUI implements Initializable{
 	@FXML
 	BorderPane paneActions;
 	@FXML
-	ListView listMessages;
+	ListView<String> listMessages;
 	@FXML
 	TextArea detailMessage;
 	private Timeline refreshMessages;
-	
+
 	public ControllerGUI() {
-		
 	}
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
@@ -63,17 +63,16 @@ public class ControllerGUI implements Initializable{
 		}
 		refreshMessages();
 	}
-	
+
 	private void refreshMessages() {
-		EventHandler e = new EventHandler<ActionEvent>(){ 
-			   @Override 
-			   public void handle(ActionEvent e) { 
-				   initListMessages();
-			   } 
-			}; 
-			
-			new KeyFrame(Duration.seconds(1), e);
-			
+		EventHandler e = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				initListMessages();
+			}
+		};
+
+		new KeyFrame(Duration.seconds(1), e);
 		KeyFrame k = new KeyFrame(Duration.seconds(1), e);
 		refreshMessages = new Timeline(k);
 		refreshMessages.setCycleCount(Timeline.INDEFINITE);
@@ -82,26 +81,24 @@ public class ControllerGUI implements Initializable{
 
 	public void initListView() {
 		listMessages.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                    
-                    String ligne = (String) listMessages.getSelectionModel().getSelectedItem();
-                    
-                    if (ligne != null) {
-                    	detailMessage.setVisible(true);
-                    	detailMessage.setText(ligne);
-                    }
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					String ligne = (String) listMessages.getSelectionModel().getSelectedItem();
+					if (ligne != null) {
+						detailMessage.setVisible(true);
+						detailMessage.setText(ligne);
+					}
+				}
+			}
+		});
 	}
-            }
-            });
-	}
-	
+
 	private void initListMessages() {
 		listMessages.getItems().clear();
 		try {
 			List<String> messages = myComponent.getMessages(labelPseudo.getText());
-			for(int i = messages.size()-1; i>=0 ; i--) {
+			for (int i = messages.size() - 1; i >= 0; i--) {
 				listMessages.getItems().add(messages.get(i));
 			}
 		} catch (RemoteException e) {
@@ -110,7 +107,7 @@ public class ControllerGUI implements Initializable{
 	}
 
 	public void connect() {
-		if(!(pseudo.getText().length()<=3)) {
+		if (!(pseudo.getText().length() <= 3)) {
 			try {
 				myComponent.connect(pseudo.getText());
 				System.out.println("Your are connected as " + pseudo.getText());
@@ -118,12 +115,11 @@ public class ControllerGUI implements Initializable{
 				labelPseudo.setText(pseudo.getText());
 				pseudo.setText("");
 				hboxConnect.setVisible(false);
-				Client.pseudo = pseudo.getText();
 				initListView();
 				initListMessages();
 				paneActions.setVisible(true);
 				Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
-				currentStage.setOnHidden(e->{
+				currentStage.setOnHidden(e -> {
 					try {
 						myComponent.disconnect(labelPseudo.getText());
 					} catch (RemoteException e2) {
@@ -132,51 +128,51 @@ public class ControllerGUI implements Initializable{
 					}
 				});
 				currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				    @Override
-				    public void handle(WindowEvent e) {
-				    	try {
+					@Override
+					public void handle(WindowEvent e) {
+						try {
 							myComponent.disconnect(pseudo.getText());
 							System.out.println(pseudo.getText());
 						} catch (RemoteException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-				    }
-				  });
+					}
+				});
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		}else {
+
+		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("You must enter a valid name");
 			alert.setTitle("Pseudonym error");
 			alert.show();
 		}
 	}
-	
+
 	public void showUsers() throws RemoteException {
 		Timeline refreshUsers;
 		ListView lv = new ListView();
 		lv.setSelectionModel(null);
-		EventHandler e = new EventHandler<ActionEvent>(){ 
-			   @Override 
-			   public void handle(ActionEvent e) { 
-					List<String> clients;
-					try {
-						lv.getItems().clear();
-						clients = myComponent.getClients();
-						for (String s : clients) {
-							lv.getItems().add(s);		
-						}
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+		EventHandler e = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				List<String> clients;
+				try {
+					lv.getItems().clear();
+					clients = myComponent.getClients();
+					for (String s : clients) {
+						lv.getItems().add(s);
 					}
-			   } 
-			}; 
-			
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		};
+
 		new KeyFrame(Duration.seconds(1), e);
 		KeyFrame k = new KeyFrame(Duration.seconds(2), e);
 		refreshUsers = new Timeline(k);
@@ -185,18 +181,19 @@ public class ControllerGUI implements Initializable{
 		BorderPane bp = new BorderPane();
 		bp.setCenter(lv);
 		Scene scene = new Scene(bp);
+		scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-		    @Override
-		    public void handle(WindowEvent e) {
-		    	refreshUsers.stop();
-		    }
-		  });
+			@Override
+			public void handle(WindowEvent e) {
+				refreshUsers.stop();
+			}
+		});
 		stage.show();
 		refreshUsers.play();
 	}
-	
+
 	public void newMessage() {
 		try {
 			Stage stage = new Stage();
@@ -204,19 +201,16 @@ public class ControllerGUI implements Initializable{
 			FXMLLoader loader = new FXMLLoader(Client.class.getResource("NewMessage.fxml"));
 			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText());
 			loader.setController(controller);
-			
-			Scene scene = new Scene(loader.load(), 500 , 400);
+			Scene scene = new Scene(loader.load(), 500, 400);
+			scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setTitle("New message");			
+			stage.setTitle("New message");
 			stage.show();
-			
-
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	public void disconnect() {
 		try {
 			myComponent.disconnect(labelPseudo.getText());
@@ -230,7 +224,7 @@ public class ControllerGUI implements Initializable{
 		} catch (RemoteException e) {
 		}
 	}
-	
+
 	public void close() {
 		try {
 			myComponent.disconnect(labelPseudo.getText());
