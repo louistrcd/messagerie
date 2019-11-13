@@ -8,6 +8,9 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +29,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 public class ControllerGUI implements Initializable{
 
@@ -44,6 +48,7 @@ public class ControllerGUI implements Initializable{
 	ListView listMessages;
 	@FXML
 	TextArea detailMessage;
+	private Timeline refreshMessages;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -52,8 +57,26 @@ public class ControllerGUI implements Initializable{
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
+		
+		refreshMessages();
 	}
 	
+	private void refreshMessages() {
+		EventHandler e = new EventHandler<ActionEvent>(){ 
+			   @Override 
+			   public void handle(ActionEvent e) { 
+				   initListMessages();
+			   } 
+			}; 
+			
+			new KeyFrame(Duration.seconds(1), e);
+			
+		KeyFrame k = new KeyFrame(Duration.seconds(1), e);
+		refreshMessages = new Timeline(k);
+		refreshMessages.setCycleCount(Timeline.INDEFINITE);
+		refreshMessages.play();
+	}
+
 	public void initListView() {
 		listMessages.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -72,14 +95,12 @@ public class ControllerGUI implements Initializable{
 	}
 	
 	private void initListMessages() {
+		listMessages.getItems().clear();
 		try {
 			List<String> messages = myComponent.getMessages(labelPseudo.getText());
 			for(int i = messages.size()-1; i>=0 ; i--) {
 				listMessages.getItems().add(messages.get(i));
 			}
-//			for(String message : messages) {
-//				listMessages.getItems().add(message);
-//			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -107,6 +128,21 @@ public class ControllerGUI implements Initializable{
 			alert.setTitle("Pseudonym error");
 			alert.show();
 		}
+	}
+	
+	public void showUsers() throws RemoteException {
+		Stage stage = new Stage();
+		BorderPane bp = new BorderPane();
+		ListView lv = new ListView();
+		List<String> clients = myComponent.getClients();
+		for (String s : clients) {
+			lv.getItems().add(s);		
+		}
+		bp.setCenter(lv);
+		Scene scene = new Scene(bp);
+		stage.setScene(scene);
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.show();
 	}
 	
 	public void newMessage() {

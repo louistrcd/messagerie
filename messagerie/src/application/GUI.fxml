@@ -61,13 +61,13 @@
          <center>
             <BorderPane fx:id="paneActions" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
                <center>
-                  <ListView fx:id="listMessages" fixedCellSize="40.0" prefHeight="429.0" prefWidth="582.0" BorderPane.alignment="CENTER" />
+                  <ListView fx:id="listMessages" fixedCellSize="60.0" prefHeight="429.0" prefWidth="582.0" BorderPane.alignment="CENTER" />
                </center>
                <BorderPane.margin>
                   <Insets bottom="11.0" top="25.0" />
                </BorderPane.margin>
                <top>
-                  <HBox spacing="161.0" BorderPane.alignment="CENTER">
+                  <HBox spacing="120.0" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="6.0" />
                      </BorderPane.margin>
@@ -78,6 +78,7 @@
                               <Insets top="4.0" />
                            </HBox.margin>
                         </Label>
+                        <Button mnemonicParsing="false" onAction="#showUsers" text="Show users" />
                      </children>
                   </HBox>
                </top>

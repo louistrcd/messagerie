@@ -12,7 +12,6 @@ public class Message {
 	
 	public String showMessage(){
 		String message = "Expéditeur : " + from + "\n" + text;
-		System.out.println(message);
 		return message;
 	}
 	
