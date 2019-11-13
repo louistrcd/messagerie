@@ -21,7 +21,7 @@ public class Client extends Application{
 	@Override
 	public void start(Stage arg0) throws Exception {
 		try {
-			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
+			myComponent = (Dialogue) Naming.lookup("rmi://159.31.63.250:1099/Dialogue");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}

@@ -15,6 +15,8 @@ public class Server {
 			// component instanciation and implicit activation
 			DialogueImpl myComponent = new DialogueImpl();
 			
+			ConnectionImpl myConnection = new ConnectionImpl();
+			
 			System.out.println(myComponent.getRef().remoteToString());
 			
 			//publication of component reference in the registry

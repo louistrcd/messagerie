@@ -190,7 +190,7 @@ public class ControllerGUI implements Initializable {
 			Stage stage = new Stage();
 			stage.initModality(Modality.APPLICATION_MODAL);
 			FXMLLoader loader = new FXMLLoader(Client.class.getResource("NewMessage.fxml"));
-			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText());
+			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText(), myComponent);
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load(), 500, 400);
 			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());

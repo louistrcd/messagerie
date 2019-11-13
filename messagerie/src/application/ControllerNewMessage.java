@@ -28,17 +28,13 @@ public class ControllerNewMessage implements Initializable{
 	@FXML
 	TextArea message;
 	
-	public ControllerNewMessage(String pseudo) {
+	public ControllerNewMessage(String pseudo, Dialogue myComponent) {
 		this.pseudo = pseudo;
+		this.myComponent = myComponent;
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		try {
-			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
-		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void sendMessage() {
