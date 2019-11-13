@@ -29,51 +29,6 @@ public class Client extends Application{
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
-//		Dialogue myComponent;
-//		try {
-//			// example of a RMI URL use to retrieve a remote reference
-//			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
-//			Scanner r = new Scanner(System.in);
-//			System.out.println("Please enter your pseudonym :");
-//			String myPseudo = r.next();
-//			try {
-//				myComponent.connect(myPseudo);
-//				System.out.println("You are connected as " + myPseudo);
-//				System.out.println("What do you want to do ? S : Send, R : Read, D : Disconnect, C : See clients");
-//				r = new Scanner(System.in);
-//				String answer = r.next().toUpperCase();
-//				while(!answer.equals("D")) {
-//					switch (answer) {
-//					case "S":
-//						System.out.println("Who is the recipient ?");
-//						r = new Scanner(System.in);
-//						String to = r.next();
-//						System.out.println("What is the message ?");
-//						r = new Scanner(System.in);
-//						String message = r.nextLine();
-//						myComponent.sendMessage(myPseudo, to, message);
-//						System.out.println("Your message was successfully sent to " + to);
-//						break;
-//					case "R":
-//						System.out.println(myComponent.getMessages(myPseudo));
-//						break;
-//					case "C":
-//						System.out.println(myComponent.getClients());
-//						break;
-//					}
-//					System.out.println("What do you want to do ? S : Send, R : Read, D : Disconnect, C : See clients");
-//					r = new Scanner(System.in);
-//					answer = r.next().toUpperCase();
-//				}
-//				myComponent.disconnect(myPseudo);
-//				System.out.println("You are disconnected");
-//			} catch (Exception e) {
-//			}
-//		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
 	}
 
 	@Override
