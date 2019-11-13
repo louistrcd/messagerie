@@ -1,14 +1,10 @@
 package application;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -16,7 +12,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -51,16 +46,12 @@ public class ControllerGUI implements Initializable {
 	TextArea detailMessage;
 	private Timeline refreshMessages;
 
-	public ControllerGUI() {
+	public ControllerGUI(Dialogue myComponent) {
+		this.myComponent = myComponent;
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		try {
-			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
-		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			e.printStackTrace();
-		}
 		refreshMessages();
 	}
 

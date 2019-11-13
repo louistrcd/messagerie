@@ -3,29 +3,19 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
-import java.util.Scanner;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class Client extends Application{
 	
-	static Dialogue myComponent;
-
+	Dialogue myComponent;
+	
 	public static void main(String[] args) {
 		launch(args);
-		try {
-			myComponent = (Dialogue) Naming.lookup("rmi://localhost:1099/Dialogue");
-		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -35,11 +25,10 @@ public class Client extends Application{
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
-		
 		try {
 			Stage stage = new Stage();
 			FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
-			ControllerGUI controller = new ControllerGUI();
+			ControllerGUI controller = new ControllerGUI(myComponent);
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load());
 			scene.getStylesheets().add(Client.class.getResource("styleAnalyse.css").toExternalForm());
