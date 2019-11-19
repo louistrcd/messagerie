@@ -164,7 +164,7 @@ public class ControllerGUI implements Initializable {
 		};
 
 		new KeyFrame(Duration.seconds(1), e);
-		KeyFrame k = new KeyFrame(Duration.seconds(2), e);
+		KeyFrame k = new KeyFrame(Duration.millis(500), e);
 		refreshUsers = new Timeline(k);
 		refreshUsers.setCycleCount(Timeline.INDEFINITE);
 		Stage stage = new Stage();
