@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
 public class ControllerNewMessage implements Initializable{
@@ -25,7 +26,7 @@ public class ControllerNewMessage implements Initializable{
 	Connection myConnection;
 	String pseudo;
 	@FXML
-	TextField recipient;
+	ComboBox recipient;
 	@FXML
 	TextArea message;
 	
@@ -37,17 +38,31 @@ public class ControllerNewMessage implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		try {
+			initRecipients();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void initRecipients() throws RemoteException {
+		if(recipient!=null) {
+	        new AutoCompleteComboBoxListener<>(recipient);
+		}
+		for(String s : myConnection.getClients()) {
+			recipient.getItems().add(s);
+		}
 	}
 	
 	public void sendMessage() {
-		if(recipient.getText().length()>3 && message.getText().length()>3) {
+		if(recipient.getEditor().getText().length()>3 && message.getText().length()>3) {
 			try {
-				myComponent.sendMessage(pseudo, recipient.getText(), message.getText(), myConnection);
+				myComponent.sendMessage(pseudo, recipient.getEditor().getText(), message.getText(), myConnection);
 				Stage currentStage = (Stage) recipient.getScene().getWindow();
 				PauseTransition pause = new PauseTransition(Duration.seconds(0.4));
 				System.out.println("C'est fait");
 				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setContentText("Your message has been sent to " + recipient.getText());
+				alert.setContentText("Your message has been sent to " + recipient.getEditor().getText());
 				alert.setTitle("Message confirmation");
 				alert.show();
 				pause.setOnFinished(new EventHandler<ActionEvent>() {

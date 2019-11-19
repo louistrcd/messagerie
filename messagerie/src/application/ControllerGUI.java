@@ -109,6 +109,7 @@ public class ControllerGUI implements Initializable {
 				initListView();
 				initListMessages();
 				paneActions.setVisible(true);
+				refreshMessages();
 				Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
 				currentStage.setOnHidden(e -> {
 					try {
