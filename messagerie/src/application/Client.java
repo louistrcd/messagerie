@@ -11,9 +11,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Client extends Application{
-	
-	Dialogue myComponent;
-	
+
+	Connection myConnection;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -21,19 +20,26 @@ public class Client extends Application{
 	@Override
 	public void start(Stage arg0) throws Exception {
 		try {
-			myComponent = (Dialogue) Naming.lookup("rmi://159.31.63.250:1099/Dialogue");
+			myConnection = (Connection) Naming.lookup("rmi://159.31.63.250:1099/Connection");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}
 		try {
 			Stage stage = new Stage();
 			FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
-			ControllerGUI controller = new ControllerGUI(myComponent);
+			ControllerGUI controller = new ControllerGUI(myConnection);
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load());
 			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setOnCloseRequest(e->controller.close());
+			stage.setOnCloseRequest(e->{
+				try {
+					controller.close();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
 			stage.setTitle("Messenger");
 			stage.show();
 		} catch (IOException e1) {

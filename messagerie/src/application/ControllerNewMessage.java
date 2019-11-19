@@ -22,15 +22,17 @@ import javafx.scene.control.TextArea;
 
 public class ControllerNewMessage implements Initializable{
 	Dialogue myComponent;
+	Connection myConnection;
 	String pseudo;
 	@FXML
 	TextField recipient;
 	@FXML
 	TextArea message;
 	
-	public ControllerNewMessage(String pseudo, Dialogue myComponent) {
+	public ControllerNewMessage(String pseudo, Dialogue myComponent, Connection myConnection) {
 		this.pseudo = pseudo;
 		this.myComponent = myComponent;
+		this.myConnection = myConnection;
 	}
 	
 	@Override
@@ -40,7 +42,7 @@ public class ControllerNewMessage implements Initializable{
 	public void sendMessage() {
 		if(recipient.getText().length()>3 && message.getText().length()>3) {
 			try {
-				myComponent.sendMessage(pseudo, recipient.getText(), message.getText());
+				myComponent.sendMessage(pseudo, recipient.getText(), message.getText(), myConnection);
 				Stage currentStage = (Stage) recipient.getScene().getWindow();
 				PauseTransition pause = new PauseTransition(Duration.seconds(0.4));
 				System.out.println("C'est fait");

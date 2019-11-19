@@ -7,55 +7,30 @@ import java.util.List;
 
 public class DialogueImpl extends UnicastRemoteObject implements Dialogue{
 
-	List<String> clients = new ArrayList<>();
-	HashMap<String, ArrayList<Message>> mailbox = new HashMap<String, ArrayList<Message>>();
+	String pseudo;
 	
 	protected DialogueImpl() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	
+	protected DialogueImpl(String pseudo) throws RemoteException {
+		super();
+		this.pseudo = pseudo;
 	}
 
 	@Override
-	public void connect(String pseudo) throws RemoteException {
-		if(!clients.contains(pseudo)) {
-			clients.add(pseudo);
-		}
+	public List<String> getClients(Connection myConnection) throws RemoteException {
+		return myConnection.getClients();
 	}
 
 	@Override
-	public void disconnect(String pseudo) throws RemoteException {
-		if(clients.contains(pseudo)) {
-			clients.remove(pseudo);
-		}
+	public void sendMessage(String from, String to, String text, Connection myConnection) throws RemoteException {
+		myConnection.sendMessage(from, to, text);
 	}
 
 	@Override
-	public List<String> getClients() throws RemoteException {
-		return clients;
-	}
-
-	@Override
-	public void sendMessage(String from, String to, String text) throws RemoteException {
-		Message message = new Message(from, text);	
-		if(mailbox.get(to)!=null) {
-			mailbox.get(to).add(message);
-		}else {
-			mailbox.put(to, new ArrayList<Message>());
-			mailbox.get(to).add(message);
-		}
-	}
-
-	@Override
-	public List<String> getMessages(String pseudo) throws RemoteException {
-		List<String> messages = new ArrayList<String>();
-		if(mailbox.get(pseudo)==null) {
-			messages.add("No message in the mailbox");
-		}else {
-			for(Message m : mailbox.get(pseudo)) {
-				messages.add(m.showMessage());
-			}
-		}
-		return messages;
+	public List<String> getMessages(String pseudo, Connection myConnection) throws RemoteException {
+		return myConnection.getMessages(pseudo);
 	}
 
 }
