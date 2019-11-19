@@ -17,10 +17,10 @@ public class Server {
 			
 			ConnectionImpl myConnection = new ConnectionImpl();
 			
-			System.out.println(myComponent.getRef().remoteToString());
+			System.out.println(myConnection.getRef().remoteToString());
 			
 			//publication of component reference in the registry
-			Naming.rebind("Dialogue", myComponent);
+			Naming.rebind("Connection", myConnection);
 			
 			System.out.println("Serveur actif");
 			
