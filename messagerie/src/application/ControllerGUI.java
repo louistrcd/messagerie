@@ -29,8 +29,9 @@ import javafx.util.Duration;
 
 public class ControllerGUI implements Initializable {
 
-	Dialogue myComponent;
 	Connection myConnection;
+	Emitter myEmitter;
+	Receiver myReceiver;
 	@FXML
 	TextField pseudo;
 	@FXML
@@ -45,7 +46,6 @@ public class ControllerGUI implements Initializable {
 	ListView<String> listMessages;
 	@FXML
 	TextArea detailMessage;
-	private Timeline refreshMessages;
 
 	public ControllerGUI(Connection myConnection) {
 		this.myConnection = myConnection;
@@ -54,20 +54,6 @@ public class ControllerGUI implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//refreshMessages();
-	}
-
-	private void refreshMessages() {
-		EventHandler e = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				initListMessages();
-			}
-		};
-		new KeyFrame(Duration.seconds(1), e);
-		KeyFrame k = new KeyFrame(Duration.seconds(1), e);
-		refreshMessages = new Timeline(k);
-		refreshMessages.setCycleCount(Timeline.INDEFINITE);
-		refreshMessages.play();
 	}
 
 	public void initListView() {
@@ -87,50 +73,47 @@ public class ControllerGUI implements Initializable {
 
 	private void initListMessages() {
 		listMessages.getItems().clear();
-		try {
-			List<String> messages = myComponent.getMessages(labelPseudo.getText(), myConnection);
-			for (int i = messages.size() - 1; i >= 0; i--) {
-				listMessages.getItems().add(messages.get(i));
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		List<String> messages = myReceiver.getMessages();
+		for (int i = messages.size() - 1; i >= 0; i--) {
+			listMessages.getItems().add(messages.get(i));
 		}
 	}
 
 	public void connect() {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
-				myComponent = myConnection.connect(pseudo.getText());
-				System.out.println("Your are connected as " + pseudo.getText());
-				labelConnected.setVisible(true);
-				labelPseudo.setText(pseudo.getText());
-				pseudo.setText("");
-				hboxConnect.setVisible(false);
-				initListView();
-				initListMessages();
-				paneActions.setVisible(true);
-				refreshMessages();
-				Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
-				currentStage.setOnHidden(e -> {
-					try {
-						myConnection.disconnect(labelPseudo.getText());
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				});
-				currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent e) {
-						try {
-							myConnection.disconnect(pseudo.getText());
-						} catch (RemoteException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+				myReceiver = myConnection.getReceiverOf(pseudo.getText());
+				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
+				myEmitter.setMyConnection(myConnection);
+				if(myEmitter == null) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Connection error");
+					alert.setContentText("Pseudo already connected in a session");
+					alert.show();
+				}else {
+					System.out.println("Your are connected as " + pseudo.getText());
+					labelConnected.setVisible(true);
+					labelPseudo.setText(pseudo.getText());
+					pseudo.setText("");
+					hboxConnect.setVisible(false);
+					initListView();
+					initListMessages();
+					paneActions.setVisible(true);
+					Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
+					currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent e) {
+							try {
+								myConnection.disconnect(pseudo.getText());
+							} catch (RemoteException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							System.out.println(pseudo.getText());
 						}
-						System.out.println(pseudo.getText());
-					}
-				});
+					});
+				}
+
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -152,7 +135,7 @@ public class ControllerGUI implements Initializable {
 				List<String> clients;
 				try {
 					lv.getItems().clear();
-					clients = myComponent.getClients(myConnection);
+					clients = myConnection.getConnected();
 					for (String s : clients) {
 						lv.getItems().add(s);
 					}
@@ -187,7 +170,7 @@ public class ControllerGUI implements Initializable {
 			Stage stage = new Stage();
 			stage.initModality(Modality.APPLICATION_MODAL);
 			FXMLLoader loader = new FXMLLoader(Client.class.getResource("NewMessage.fxml"));
-			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText(), myComponent, myConnection);
+			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText(), myConnection, myEmitter);
 			loader.setController(controller);
 			Scene scene = new Scene(loader.load(), 500, 400);
 			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());

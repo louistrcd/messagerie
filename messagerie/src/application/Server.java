@@ -13,7 +13,6 @@ public class Server {
 			LocateRegistry.createRegistry(1099);
 			
 			// component instanciation and implicit activation
-			DialogueImpl myComponent = new DialogueImpl();
 			
 			ConnectionImpl myConnection = new ConnectionImpl();
 			

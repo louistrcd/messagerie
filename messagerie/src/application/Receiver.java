@@ -1,11 +1,14 @@
 package application;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
-public interface Receiver {
+public interface Receiver extends Remote {
 
-	void receive(String from, String text);
-	void initClients(List<String> Clients);
-	void addClient(String client);
-	void remClient(String client);
+	List<String> getMessages();
+	void receive(String from, String text) throws RemoteException;
+	void initClients(List<String> Clients) throws RemoteException;
+	void addClient(String client) throws RemoteException;
+	void remClient(String client) throws RemoteException;
 }

@@ -22,18 +22,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
 public class ControllerNewMessage implements Initializable{
-	Dialogue myComponent;
+
 	Connection myConnection;
+	Emitter myEmitter;
 	String pseudo;
 	@FXML
 	ComboBox recipient;
 	@FXML
 	TextArea message;
 	
-	public ControllerNewMessage(String pseudo, Dialogue myComponent, Connection myConnection) {
+	public ControllerNewMessage(String pseudo, Connection myConnection, Emitter myEmitter) {
 		this.pseudo = pseudo;
-		this.myComponent = myComponent;
 		this.myConnection = myConnection;
+		this.myEmitter = myEmitter;
 	}
 	
 	@Override
@@ -49,33 +50,28 @@ public class ControllerNewMessage implements Initializable{
 		if(recipient!=null) {
 	        new AutoCompleteComboBoxListener<>(recipient);
 		}
-		for(String s : myConnection.getClients()) {
+		for(String s : myConnection.getConnected()) {
 			recipient.getItems().add(s);
 		}
 	}
 	
-	public void sendMessage() {
+	public void sendMessage() throws RemoteException {
 		if(recipient.getEditor().getText().length()>3 && message.getText().length()>3) {
-			try {
-				myComponent.sendMessage(pseudo, recipient.getEditor().getText(), message.getText(), myConnection);
-				Stage currentStage = (Stage) recipient.getScene().getWindow();
-				PauseTransition pause = new PauseTransition(Duration.seconds(0.4));
-				System.out.println("C'est fait");
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setContentText("Your message has been sent to " + recipient.getEditor().getText());
-				alert.setTitle("Message confirmation");
-				alert.show();
-				pause.setOnFinished(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						currentStage.close();
-					}
-				});
-				pause.play();
-				
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
+			myEmitter.sendMessage(recipient.getEditor().getText(), message.getText());
+			Stage currentStage = (Stage) recipient.getScene().getWindow();
+			PauseTransition pause = new PauseTransition(Duration.seconds(0.4));
+			System.out.println("C'est fait");
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setContentText("Your message has been sent to " + recipient.getEditor().getText());
+			alert.setTitle("Message confirmation");
+			alert.show();
+			pause.setOnFinished(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					currentStage.close();
+				}
+			});
+			pause.play();
 		}else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("No informations entered");
