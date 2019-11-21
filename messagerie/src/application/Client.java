@@ -20,7 +20,7 @@ public class Client extends Application{
 	@Override
 	public void start(Stage arg0) throws Exception {
 		try {
-			myConnection = (Connection) Naming.lookup("rmi://159.31.63.250:1099/Connection");
+			myConnection = (Connection) Naming.lookup("rmi://localhost/Connection");
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
 		}

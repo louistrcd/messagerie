@@ -24,18 +24,19 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 	}
 	
 	@Override
-	public Receiver getReceiverOf(String pseudo) {
+	public Receiver getReceiverOf(String pseudo) throws RemoteException {
 		Receiver receiver = null;
 		if(receivers.containsValue(pseudo)) {
 			receiver = receivers.get(pseudo);
 		}else {
 			receiver = new ReceiverImpl(connected);
 		}
+
 		return receiver;	
 	}
 
 	@Override
-	public Emitter connect(String pseudo, Receiver rcv) {
+	public Emitter connect(String pseudo, Receiver rcv) throws RemoteException {
 		Emitter emitter = null;
 		if(connected.contains(pseudo)) {
 			emitter = null;

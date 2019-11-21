@@ -1,15 +1,22 @@
 package application;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceiverImpl implements Receiver {
+public class ReceiverImpl extends UnicastRemoteObject implements Receiver{
 	
 	List<String> connected = new ArrayList<String>();
 	List<String> messages = new ArrayList<String>();
 	
-	public ReceiverImpl(List<String> clients) {
+	public ReceiverImpl(List<String> clients) throws RemoteException {
+		super();
 		this.connected = clients;
+	}
+	
+	public ReceiverImpl() throws RemoteException {
+		super();
 	}
 	
 	@Override

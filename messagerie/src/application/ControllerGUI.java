@@ -71,7 +71,7 @@ public class ControllerGUI implements Initializable {
 		});
 	}
 
-	private void initListMessages() {
+	private void initListMessages() throws RemoteException {
 		listMessages.getItems().clear();
 		List<String> messages = myReceiver.getMessages();
 		for (int i = messages.size() - 1; i >= 0; i--) {
@@ -82,7 +82,8 @@ public class ControllerGUI implements Initializable {
 	public void connect() {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
-				myReceiver = myConnection.getReceiverOf(pseudo.getText());
+				//myReceiver = myConnection.getReceiverOf(pseudo.getText());
+				myReceiver = new ReceiverImpl();
 				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
 				myEmitter.setMyConnection(myConnection);
 				if(myEmitter == null) {

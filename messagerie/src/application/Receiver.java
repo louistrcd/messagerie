@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Receiver extends Remote {
 
-	List<String> getMessages();
+	List<String> getMessages() throws RemoteException;
 	void receive(String from, String text) throws RemoteException;
 	void initClients(List<String> Clients) throws RemoteException;
 	void addClient(String client) throws RemoteException;
