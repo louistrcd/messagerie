@@ -71,7 +71,7 @@ public class ControllerGUI implements Initializable {
 		});
 	}
 
-	private void initListMessages() throws RemoteException {
+	public void initListMessages() throws RemoteException {
 		listMessages.getItems().clear();
 		List<String> messages = myReceiver.getMessages();
 		for (int i = messages.size() - 1; i >= 0; i--) {
@@ -82,16 +82,16 @@ public class ControllerGUI implements Initializable {
 	public void connect() {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
-				//myReceiver = myConnection.getReceiverOf(pseudo.getText());
-				myReceiver = new ReceiverImpl();
+				myReceiver = myConnection.getReceiverOf(pseudo.getText());
+				System.out.println(myReceiver.getMessages().size() + "taille messages");
 				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
-				myEmitter.setMyConnection(myConnection);
 				if(myEmitter == null) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Connection error");
 					alert.setContentText("Pseudo already connected in a session");
 					alert.show();
 				}else {
+					myEmitter.setMyConnection(myConnection);
 					System.out.println("Your are connected as " + pseudo.getText());
 					labelConnected.setVisible(true);
 					labelPseudo.setText(pseudo.getText());
@@ -100,19 +100,6 @@ public class ControllerGUI implements Initializable {
 					initListView();
 					initListMessages();
 					paneActions.setVisible(true);
-					Stage currentStage = (Stage) labelPseudo.getScene().getWindow();
-					currentStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-						@Override
-						public void handle(WindowEvent e) {
-							try {
-								myConnection.disconnect(pseudo.getText());
-							} catch (RemoteException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							System.out.println(pseudo.getText());
-						}
-					});
 				}
 
 			} catch (RemoteException e) {
@@ -192,10 +179,12 @@ public class ControllerGUI implements Initializable {
 		listMessages.getItems().clear();
 		detailMessage.setText("");
 		detailMessage.setVisible(false);
+		System.out.println("Disconnected");
 	}
 
 	public void close() throws RemoteException {
 		myConnection.disconnect(labelPseudo.getText());
+		System.exit(0);
 	}
 
 }

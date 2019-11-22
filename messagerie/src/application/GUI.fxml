@@ -67,7 +67,7 @@
                   <Insets bottom="11.0" top="25.0" />
                </BorderPane.margin>
                <top>
-                  <HBox spacing="185.0" BorderPane.alignment="CENTER">
+                  <HBox spacing="60.0" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="6.0" />
                      </BorderPane.margin>
@@ -78,7 +78,8 @@
                               <Insets top="4.0" />
                            </HBox.margin>
                         </Label>
-                        <Button mnemonicParsing="false" onAction="#showUsers" text="Show users" />
+                        <Button mnemonicParsing="false" onAction="#initListMessages" text="Refresh Messages" />
+                        <Button layoutX="541.0" layoutY="10.0" mnemonicParsing="false" onAction="#showUsers" text="Show users" />
                      </children>
                   </HBox>
                </top>

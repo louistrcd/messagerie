@@ -15,7 +15,7 @@ public class EmitterImpl extends UnicastRemoteObject implements Emitter{
 	
 	@Override
 	public void setMyConnection(Connection c) {
-		myConnection = c;
+		this.myConnection = c;
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class ControllerNewMessage implements Initializable{
 			myEmitter.sendMessage(recipient.getEditor().getText(), message.getText());
 			Stage currentStage = (Stage) recipient.getScene().getWindow();
 			PauseTransition pause = new PauseTransition(Duration.seconds(0.4));
-			System.out.println("C'est fait");
+			System.out.println("Your message has been sent to " + recipient.getEditor().getText());
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setContentText("Your message has been sent to " + recipient.getEditor().getText());
 			alert.setTitle("Message confirmation");

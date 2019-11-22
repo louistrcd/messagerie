@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.stage.Stage;
+
 public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 
 	private static final long serialVersionUID = 1L;
@@ -26,12 +28,12 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 	@Override
 	public Receiver getReceiverOf(String pseudo) throws RemoteException {
 		Receiver receiver = null;
-		if(receivers.containsValue(pseudo)) {
+		if(receivers.get(pseudo)!=null) {
 			receiver = receivers.get(pseudo);
 		}else {
 			receiver = new ReceiverImpl(connected);
 		}
-
+		
 		return receiver;	
 	}
 
@@ -44,6 +46,7 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 			if(!receivers.containsValue(pseudo)) {
 				emitter = new EmitterImpl(pseudo);
 				receivers.put(pseudo, rcv);
+				System.out.println("Receivers size " + receivers.size());
 			}
 			connected.add(pseudo);
 		}

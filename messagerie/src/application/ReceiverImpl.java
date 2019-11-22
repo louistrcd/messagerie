@@ -26,7 +26,7 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver{
 	
 	@Override
 	public void receive(String from, String text) {
-		messages.add(from + " : " + text);
+		messages.add("Expéditeur : " + from + "\n" + text);
 		
 	}
 
