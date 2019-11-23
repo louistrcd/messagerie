@@ -2,10 +2,8 @@ package application;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +11,6 @@ import javafx.collections.ObservableList;
 public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 
 	ObservableList<String> connected = FXCollections.observableArrayList();
-	ObservableList<String> messages = FXCollections.observableArrayList();
 	HashMap<String, ObservableList<String>> mailbox = new HashMap<String, ObservableList<String>>();
 	ControllerGUI controller;
 
@@ -23,11 +20,6 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 
 	public void setController(ControllerGUI controller, String pseudo) {
 		this.controller = controller;
-	}
-
-	@Override
-	public ObservableList<String> getMessages() {
-		return messages;
 	}
 
 	@Override
@@ -74,17 +66,6 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 			}
 		});
 
-	}
-
-	@Override
-	public void addClient(String client) {
-		connected.add(client);
-
-	}
-
-	@Override
-	public void remClient(String client) {
-		connected.remove(client);
 	}
 
 }

@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.stage.Stage;
-
 public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 
 	private static final long serialVersionUID = 1L;

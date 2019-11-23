@@ -3,8 +3,6 @@ package application;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,7 +46,6 @@ public class ControllerGUI implements Initializable {
 	ListView<String> listMessages;
 	@FXML
 	TextArea message;
-	ObservableList<String> myMessages = FXCollections.observableArrayList();
 
 	public ControllerGUI(Connection myConnection) throws RemoteException {
 		this.myConnection = myConnection;
@@ -113,7 +110,7 @@ public class ControllerGUI implements Initializable {
 		});
 	}
 
-	public class YourFormatCell extends ListCell<String> {
+	public class FormatCell extends ListCell<String> {
 		@Override
 		protected void updateItem(String item, boolean empty) {
 			super.updateItem(item, empty);
@@ -138,7 +135,7 @@ public class ControllerGUI implements Initializable {
 		listMessages.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> list) {
-				return new YourFormatCell();
+				return new FormatCell();
 			}
 		});
 		listMessages.refresh();
@@ -173,11 +170,9 @@ public class ControllerGUI implements Initializable {
 					initListView();
 					paneActions.setVisible(true);
 				}
-
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("You must enter a valid name");
@@ -207,10 +202,6 @@ public class ControllerGUI implements Initializable {
 	public void close() throws RemoteException {
 		myConnection.disconnect(labelPseudo.getText());
 		System.exit(0);
-	}
-
-	public String getPseudo() {
-		return labelPseudo.getText();
 	}
 
 }
