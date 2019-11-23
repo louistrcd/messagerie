@@ -30,22 +30,25 @@
          <top>
             <HBox spacing="30.0">
                <children>
-                  <HBox fx:id="hboxConnect" spacing="6.0">
+                  <HBox fx:id="hboxConnect" spacing="15.0">
                      <children>
                         <TextField fx:id="pseudo" promptText="Enter your pseudo" />
-                        <Button mnemonicParsing="false" onAction="#connect" text="Connect" />
+                        <Button mnemonicParsing="false" onAction="#connect" prefHeight="26.0" prefWidth="77.0" text="Connect">
+                           <HBox.margin>
+                              <Insets top="2.0" />
+                           </HBox.margin></Button>
                      </children>
                      <HBox.margin>
-                        <Insets left="-40.0" />
+                        <Insets left="-20.0" top="5.0" />
                      </HBox.margin>
                   </HBox>
                   <HBox spacing="8.0">
                      <HBox.margin>
-                        <Insets left="-29.0" top="4.0" />
+                        <Insets left="50.0" top="4.0" />
                      </HBox.margin>
                      <children>
-                        <Label fx:id="labelConnected" text="Connected as : " visible="false" />
-                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc;">
+                        <Label fx:id="labelConnected" style="-fx-font-size: 18;" text="Connected as : " visible="false" />
+                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc; -fx-font-size: 18;">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -74,35 +77,38 @@
                      <children>
                         <Label text="Clients connected">
                            <HBox.margin>
-                              <Insets top="4.0" />
+                              <Insets bottom="3.0" left="4.0" top="4.0" />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
                </top>
                <bottom>
-                  <BorderPane fx:id="bpMessages" prefHeight="300.0" prefWidth="888.0" visible="false" BorderPane.alignment="CENTER">
+                  <BorderPane fx:id="bpMessages" prefHeight="313.0" prefWidth="888.0" visible="false" BorderPane.alignment="CENTER">
                      <top>
-                        <Label fx:id="labelRecipient" style="-fx-text-fill: #03e3fc;" BorderPane.alignment="CENTER" />
+                        <Label fx:id="labelRecipient" style="-fx-text-fill: #03e3fc; -fx-font-size: 18;" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" />
+                           </BorderPane.margin></Label>
                      </top>
                      <BorderPane.margin>
-                        <Insets top="40.0" />
+                        <Insets top="30.0" />
                      </BorderPane.margin>
                      <center>
-                        <ListView fx:id="listMessages" prefHeight="214.0" prefWidth="888.0" BorderPane.alignment="CENTER" />
+                        <ListView fx:id="listMessages" prefHeight="202.0" prefWidth="888.0" style="-fx-background-color: #2e2e2e;" BorderPane.alignment="CENTER" />
                      </center>
                      <bottom>
                         <HBox spacing="30.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" />
+                              <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" style="-fx-control-inner-background: #2e2e2e;" wrapText="true" />
                               <Button fx:id="buttonSendMessage" mnemonicParsing="false" onAction="#sendMessage" text="Send message">
                                  <HBox.margin>
-                                    <Insets top="5.0" />
+                                    <Insets top="6.0" />
                                  </HBox.margin>
                               </Button>
                            </children>
                            <BorderPane.margin>
-                              <Insets bottom="20.0" top="50.0" />
+                              <Insets bottom="20.0" top="40.0" />
                            </BorderPane.margin>
                         </HBox>
                      </bottom>

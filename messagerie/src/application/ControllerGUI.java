@@ -1,39 +1,26 @@
 package application;
 
-import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import javafx.util.Duration;
 
 public class ControllerGUI implements Initializable {
 
@@ -69,6 +56,41 @@ public class ControllerGUI implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		addEnterActions();
+	}
+	
+	public void addEnterActions() {
+		pseudo.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					connect();
+				}
+			}
+		});
+
+		message.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					try {
+						sendMessage();
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+					message.setText("");
+				}
+			}
+		});
+		
+		message.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					message.setText("");
+				}
+			}
+		});
 	}
 
 	public void initListView() throws RemoteException {
@@ -89,37 +111,39 @@ public class ControllerGUI implements Initializable {
 				}
 			}
 		});
-
 	}
-	
-	public class YourFormatCell extends ListCell<String> {
-	    @Override 
-	    protected void updateItem(String item, boolean empty) {
-	        super.updateItem(item, empty);
-	        if(item!=null) {
-	        	setText(item);
-		        if(item.contains("You")) {
-		        	setStyle("-fx-text-fill: white; -fx-background-color: #0099ff;");
-		        }else if(item.contains("Bienvenue")) {
-		        	setStyle("-fx-text-fill: #ffb700; -fx-background-color: #2e2e2e;");
-		        }else {
-		        	setStyle("-fx-text-fill: white; -fx-background-color: #2e2e2e;");
-		        }
-	        }
 
-	    }
+	public class YourFormatCell extends ListCell<String> {
+		@Override
+		protected void updateItem(String item, boolean empty) {
+			super.updateItem(item, empty);
+			if (item != null) {
+				setText(item);
+				setPrefWidth(100);
+				setWrapText(true);
+				if (item.contains("You")) {
+					setStyle("-fx-text-fill: white; -fx-background-color: #0099ff;");
+				} else if (item.contains("Bienvenue")) {
+					setStyle("-fx-text-fill: #ffb700; -fx-background-color: #2e2e2e;");
+				} else {
+					setStyle("-fx-text-fill: white; -fx-background-color: #2e2e2e;");
+				}
+			}
+		}
 	}
 
 	public void initListMessages(String recipient) throws RemoteException {
+		message.requestFocus();
 		listMessages.refresh();
 		listMessages.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-		    @Override 
-		    public ListCell<String> call(ListView<String> list) {
-		        return new YourFormatCell();
-		    }
+			@Override
+			public ListCell<String> call(ListView<String> list) {
+				return new YourFormatCell();
+			}
 		});
 		listMessages.refresh();
 		listMessages.setItems(myReceiver.getMailbox(recipient));
+		listMessages.scrollTo(listMessages.getItems().size()-1);
 		listMessages.refresh();
 	}
 
@@ -142,7 +166,7 @@ public class ControllerGUI implements Initializable {
 					pseudo.setText("");
 					hboxConnect.setVisible(false);
 					listClients.setItems(myReceiver.getClients());
-					for(String s : myReceiver.getClients()) {
+					for (String s : myReceiver.getClients()) {
 						myReceiver.initMailbox(s);
 						System.out.println(s);
 					}
@@ -165,7 +189,8 @@ public class ControllerGUI implements Initializable {
 	public void sendMessage() throws RemoteException {
 		myEmitter.sendMessage(labelRecipient.getText(), message.getText());
 		myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
-		message.setText("");
+		listMessages.scrollTo(listMessages.getItems().size()-1);
+		listMessages.refresh();
 	}
 
 	public void disconnect() throws RemoteException {
@@ -183,7 +208,7 @@ public class ControllerGUI implements Initializable {
 		myConnection.disconnect(labelPseudo.getText());
 		System.exit(0);
 	}
-	
+
 	public String getPseudo() {
 		return labelPseudo.getText();
 	}
