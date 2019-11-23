@@ -106,6 +106,7 @@
                                     <Insets top="6.0" />
                                  </HBox.margin>
                               </Button>
+                              <Button mnemonicParsing="false" onAction="#test" text="Button" />
                            </children>
                            <BorderPane.margin>
                               <Insets bottom="20.0" top="40.0" />

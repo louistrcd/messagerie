@@ -61,11 +61,19 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 				connected.clear();
 				connected.addAll(Clients);
 				for(String s : Clients) {
-					initMailbox(s);
+					if(mailbox.get(s)==null) {
+						initMailbox(s);
+					}
 				}
 			}
 		});
 
+	}
+
+	@Override
+	public HashMap<String, ObservableList<String>> getMailbox() throws RemoteException {
+		
+		return mailbox;
 	}
 
 }

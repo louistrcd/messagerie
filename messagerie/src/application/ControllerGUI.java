@@ -184,6 +184,7 @@ public class ControllerGUI implements Initializable {
 	public void sendMessage() throws RemoteException {
 		myEmitter.sendMessage(labelRecipient.getText(), message.getText());
 		myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
+		message.setText("");
 		listMessages.scrollTo(listMessages.getItems().size()-1);
 		listMessages.refresh();
 	}
@@ -194,6 +195,7 @@ public class ControllerGUI implements Initializable {
 		labelConnected.setVisible(false);
 		labelPseudo.setText("");
 		paneActions.setVisible(false);
+		bpMessages.setVisible(false);
 		listMessages.getItems().clear();
 		labelRecipient.setText("");
 		System.out.println("Disconnected");
@@ -202,6 +204,10 @@ public class ControllerGUI implements Initializable {
 	public void close() throws RemoteException {
 		myConnection.disconnect(labelPseudo.getText());
 		System.exit(0);
+	}
+	
+	public void test() throws RemoteException {
+		System.out.println(myReceiver.getMailbox());
 	}
 
 }

@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class Client extends Application{
@@ -25,22 +27,29 @@ public class Client extends Application{
 			e.printStackTrace();
 		}
 		try {
-			Stage stage = new Stage();
-			FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
-			ControllerGUI controller = new ControllerGUI(myConnection);
-			loader.setController(controller);
-			Scene scene = new Scene(loader.load());
-			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
-			stage.setScene(scene);
-			stage.setOnCloseRequest(e->{
-				try {
-					controller.close();
-				} catch (RemoteException e1) {
-					e1.printStackTrace();
-				}
-			});
-			stage.setTitle("Messenger");
-			stage.show();
+			if(myConnection!=null) {
+				Stage stage = new Stage();
+				FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
+				ControllerGUI controller = new ControllerGUI(myConnection);
+				loader.setController(controller);
+				Scene scene = new Scene(loader.load());
+				scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
+				stage.setScene(scene);
+				stage.setOnCloseRequest(e->{
+					try {
+						controller.close();
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
+				});
+				stage.setTitle("Messenger");
+				stage.show();
+			}else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText("No server found at " + "rmi://localhost/Connection");
+				alert.setTitle("Server connection error");
+				alert.show();
+			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
