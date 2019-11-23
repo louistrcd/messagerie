@@ -38,7 +38,7 @@
     -fx-wrap-text: true;
 }
 
-//Chart
+
 .chart-plot-background {
     -fx-background-color:transparent;
 }
@@ -82,7 +82,7 @@
     -fx-background-insets: 1;
     -fx-border-color: transparent;
 }
-//TEST
+
 /*.menu-button,.split-menu-button {
     -fx-font-size: 14;
     -fx-pref-height: 30;
@@ -90,7 +90,7 @@
 }*/
 
 
-/////////////////////////////////////////////////////////////////
+
 .menu-bar {
     -fx-background-color: #636c76;
 }
@@ -271,7 +271,7 @@
 .scroll-bar:hover > .decrement-button {
     -fx-background-color: transparent;
     color: rgba(255, 255, 255, 1);
-    box-shadow: 0 5px 15px rgba(145, 92, 182, .4);
+    
 }
 
 .scroll-bar > .increment-button > .increment-arrow,

@@ -6,7 +6,12 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,6 +37,7 @@ public class ControllerGUI implements Initializable {
 	Connection myConnection;
 	Emitter myEmitter;
 	Receiver myReceiver;
+	
 	@FXML
 	TextField pseudo;
 	@FXML
@@ -39,51 +45,77 @@ public class ControllerGUI implements Initializable {
 	@FXML
 	Label labelConnected;
 	@FXML
+	Label labelRecipient;
+	@FXML
 	HBox hboxConnect;
 	@FXML
 	BorderPane paneActions;
 	@FXML
+	ListView<String> listClients;
+	@FXML
 	ListView<String> listMessages;
 	@FXML
-	TextArea detailMessage;
-
-	public ControllerGUI(Connection myConnection) {
+	ListView<String> listMessagesEnvoyes;
+	@FXML
+	TextArea message;
+	ObservableList<String> myMessages = FXCollections.observableArrayList();
+	
+	public ControllerGUI(Connection myConnection) throws RemoteException {
 		this.myConnection = myConnection;
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		//refreshMessages();
 	}
 
-	public void initListView() {
-		listMessages.setOnMousePressed(new EventHandler<MouseEvent>() {
+	public void initListView() throws RemoteException {
+			listClients.setItems(myReceiver.getClients());
+			listClients.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-					String ligne = (String) listMessages.getSelectionModel().getSelectedItem();
+					String ligne = (String) listClients.getSelectionModel().getSelectedItem();
 					if (ligne != null) {
-						detailMessage.setVisible(true);
-						detailMessage.setText(ligne);
+						labelRecipient.setText(ligne);
+						try {
+							myReceiver.receive(labelRecipient.getText(), "");
+							initListMessages(ligne);
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
 		});
 	}
+	
+	
 
-	public void initListMessages() throws RemoteException {
-		listMessages.getItems().clear();
-		List<String> messages = myReceiver.getMessages();
-		for (int i = messages.size() - 1; i >= 0; i--) {
-			listMessages.getItems().add(messages.get(i));
-		}
+	public void initListMessages(String recipient) throws RemoteException {
+		if(listMessages == null) {
+			listMessages = new ListView();
+		}		
+		listMessages.setItems(myReceiver.getMailbox(recipient));
+//		myReceiver.getMessages().addListener(new ListChangeListener<String>() {
+//		    @Override
+//		    public void onChanged(ListChangeListener.Change<? extends String> change) {
+//		        while (change.next()) {
+//		        	for(String s : (ObservableList<String>) change) {
+//		        		if(s.contains(recipient)) {
+//		        			listMessages.getItems().add(s);
+//		        		}
+//		        	}
+//		        }
+//		    }
+//		});	
+
 	}
 
 	public void connect() {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
-				myReceiver = myConnection.getReceiverOf(pseudo.getText());
-				System.out.println(myReceiver.getMessages().size() + "taille messages");
+				myReceiver = new ReceiverImpl();
+				myReceiver.setController(this);
 				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
 				if(myEmitter == null) {
 					Alert alert = new Alert(AlertType.ERROR);
@@ -98,7 +130,6 @@ public class ControllerGUI implements Initializable {
 					pseudo.setText("");
 					hboxConnect.setVisible(false);
 					initListView();
-					initListMessages();
 					paneActions.setVisible(true);
 				}
 
@@ -112,45 +143,6 @@ public class ControllerGUI implements Initializable {
 			alert.setTitle("Pseudonym error");
 			alert.show();
 		}
-	}
-
-	public void showUsers() throws RemoteException {
-		Timeline refreshUsers;
-		ListView lv = new ListView();
-		EventHandler e = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				List<String> clients;
-				try {
-					lv.getItems().clear();
-					clients = myConnection.getConnected();
-					for (String s : clients) {
-						lv.getItems().add(s);
-					}
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		};
-		KeyFrame k = new KeyFrame(Duration.seconds(0.5), e);
-		refreshUsers = new Timeline(k);
-		refreshUsers.setCycleCount(Timeline.INDEFINITE);
-		Stage stage = new Stage();
-		BorderPane bp = new BorderPane();
-		bp.setCenter(lv);
-		Scene scene = new Scene(bp);
-		scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
-		stage.setScene(scene);
-		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			@Override
-			public void handle(WindowEvent e) {
-				refreshUsers.stop();
-			}
-		});
-		stage.show();
-		refreshUsers.play();
 	}
 
 	public void newMessage() {
@@ -169,6 +161,12 @@ public class ControllerGUI implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendMessage() throws RemoteException {
+			myEmitter.sendMessage(labelRecipient.getText(), message.getText());
+			myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
+			message.setText("");
+	}
 
 	public void disconnect() throws RemoteException {
 		myConnection.disconnect(labelPseudo.getText());
@@ -177,8 +175,7 @@ public class ControllerGUI implements Initializable {
 		labelPseudo.setText("");
 		paneActions.setVisible(false);
 		listMessages.getItems().clear();
-		detailMessage.setText("");
-		detailMessage.setVisible(false);
+		labelRecipient.setText("");
 		System.out.println("Disconnected");
 	}
 

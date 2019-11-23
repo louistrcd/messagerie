@@ -4,9 +4,13 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface Receiver extends Remote {
+import javafx.collections.ObservableList;
 
-	List<String> getMessages() throws RemoteException;
+public interface Receiver extends Remote {
+	void setController(ControllerGUI controller) throws RemoteException;
+	ObservableList<String> getMessages() throws RemoteException;
+	ObservableList<String> getClients() throws RemoteException;
+	ObservableList<String> getMailbox(String pseudo) throws RemoteException;
 	void receive(String from, String text) throws RemoteException;
 	void initClients(List<String> Clients) throws RemoteException;
 	void addClient(String client) throws RemoteException;

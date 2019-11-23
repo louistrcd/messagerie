@@ -78,8 +78,6 @@ public class ControllerNewMessage implements Initializable{
 			alert.setTitle("Message or recipient error");
 			alert.show();
 		}
-		
-
 	}
 
 }

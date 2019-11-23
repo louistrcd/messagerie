@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane prefHeight="566.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="611.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -45,7 +45,7 @@
                      </HBox.margin>
                      <children>
                         <Label fx:id="labelConnected" text="Connected as : " visible="false" />
-                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc; -fx-font-style: bold;">
+                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc;">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -61,7 +61,7 @@
          <center>
             <BorderPane fx:id="paneActions" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
                <center>
-                  <ListView fx:id="listMessages" fixedCellSize="60.0" prefHeight="429.0" prefWidth="582.0" BorderPane.alignment="CENTER" />
+                  <ListView fx:id="listClients" fixedCellSize="30.0" prefHeight="130.0" prefWidth="888.0" BorderPane.alignment="CENTER" />
                </center>
                <BorderPane.margin>
                   <Insets bottom="11.0" top="25.0" />
@@ -72,30 +72,44 @@
                         <Insets bottom="6.0" />
                      </BorderPane.margin>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#newMessage" text="New message" />
-                        <Label text="My messages">
+                        <Label text="Clients connected">
                            <HBox.margin>
                               <Insets top="4.0" />
                            </HBox.margin>
                         </Label>
-                        <Button mnemonicParsing="false" onAction="#initListMessages" text="Refresh Messages" />
-                        <Button layoutX="541.0" layoutY="10.0" mnemonicParsing="false" onAction="#showUsers" text="Show users" />
                      </children>
                   </HBox>
                </top>
                <bottom>
-                  <BorderPane prefHeight="223.0" prefWidth="582.0" BorderPane.alignment="CENTER">
+                  <BorderPane prefHeight="246.0" prefWidth="888.0" BorderPane.alignment="CENTER">
+                     <top>
+                        <Label fx:id="labelRecipient" style="-fx-text-fill: #03e3fc;" BorderPane.alignment="CENTER" />
+                     </top>
+                     <BorderPane.margin>
+                        <Insets top="40.0" />
+                     </BorderPane.margin>
                      <center>
-                        <TextArea fx:id="detailMessage" editable="false" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets top="13.0" />
-                           </BorderPane.margin>
-                        </TextArea>
+                        <ListView fx:id="listMessages" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                      </center>
                   </BorderPane>
                </bottom>
             </BorderPane>
          </center>
+         <bottom>
+            <HBox spacing="30.0" BorderPane.alignment="CENTER">
+               <children>
+                  <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" />
+                  <Button mnemonicParsing="false" onAction="#sendMessage" text="Send message">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="20.0" />
+               </BorderPane.margin>
+            </HBox>
+         </bottom>
       </BorderPane>
    </center>
    <left>

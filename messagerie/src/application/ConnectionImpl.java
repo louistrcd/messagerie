@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.stage.Stage;
 
@@ -26,15 +27,8 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 	}
 	
 	@Override
-	public Receiver getReceiverOf(String pseudo) throws RemoteException {
-		Receiver receiver = null;
-		if(receivers.get(pseudo)!=null) {
-			receiver = receivers.get(pseudo);
-		}else {
-			receiver = new ReceiverImpl(connected);
-		}
-		
-		return receiver;	
+	public Receiver getReceiverOf(String pseudo) {
+		return receivers.get(pseudo);
 	}
 
 	@Override
@@ -43,12 +37,16 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 		if(connected.contains(pseudo)) {
 			emitter = null;
 		}else {
+			connected.add(pseudo);
 			if(!receivers.containsValue(pseudo)) {
 				emitter = new EmitterImpl(pseudo);
 				receivers.put(pseudo, rcv);
+				for(Map.Entry<String, Receiver> tupple : receivers.entrySet()) {
+					tupple.getValue().initClients(connected);
+				}
 				System.out.println("Receivers size " + receivers.size());
 			}
-			connected.add(pseudo);
+			
 		}
 		return emitter;
 	}
@@ -56,6 +54,7 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 	@Override
 	public void disconnect(String pseudo) {
 		connected.remove(pseudo);
+		receivers.remove(pseudo);
 	}
 	
 }
