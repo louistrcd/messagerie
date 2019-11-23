@@ -1,13 +1,26 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -18,7 +31,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 public class ControllerGUI implements Initializable {
 
@@ -37,6 +53,8 @@ public class ControllerGUI implements Initializable {
 	@FXML
 	HBox hboxConnect;
 	@FXML
+	HBox hboxLabel;
+	@FXML
 	BorderPane bpMessages;
 	@FXML
 	BorderPane paneActions;
@@ -46,6 +64,8 @@ public class ControllerGUI implements Initializable {
 	ListView<String> listMessages;
 	@FXML
 	TextArea message;
+	Timeline animationConnect;
+	Timeline animationDisconnect;
 
 	public ControllerGUI(Connection myConnection) throws RemoteException {
 		this.myConnection = myConnection;
@@ -149,27 +169,36 @@ public class ControllerGUI implements Initializable {
 			try {
 				myReceiver = new ReceiverImpl();
 				myReceiver.setController(this, pseudo.getText());
-				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
-				if (myEmitter == null) {
+				try {
+					myConnection = (Connection) Naming.lookup("rmi://"+Client.ipAdress + "/Connection");
+				} catch (MalformedURLException | RemoteException | NotBoundException e) {
+					e.printStackTrace();
 					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Connection error");
-					alert.setContentText("Pseudo already connected in a session");
+					alert.setContentText("No server found at " + "rmi://" + Client.ipAdress +  "/Connection");
+					alert.setTitle("Server connection error");
 					alert.show();
-				} else {
-					myEmitter.setMyConnection(myConnection);
-					System.out.println("Your are connected as " + pseudo.getText());
-					labelConnected.setVisible(true);
-					labelPseudo.setText(pseudo.getText());
-					pseudo.setText("");
-					hboxConnect.setVisible(false);
-					listClients.setItems(myReceiver.getClients());
-					for (String s : myReceiver.getClients()) {
-						myReceiver.initMailbox(s);
-						System.out.println(s);
-					}
-					initListView();
-					paneActions.setVisible(true);
 				}
+				if(myConnection!=null) {
+					myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
+					if (myEmitter == null) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Connection error");
+						alert.setContentText("Pseudo already connected in a session");
+						alert.show();
+					} else {
+						myEmitter.setMyConnection(myConnection);
+						listClients.setItems(myReceiver.getClients());
+						for (String s : myReceiver.getClients()) {
+							myReceiver.initMailbox(s);
+						}
+						initListView();
+						labelConnected.setVisible(true);
+						labelPseudo.setText(pseudo.getText());
+						pseudo.setText("");
+						animationConnect();
+					}
+				}
+
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -190,24 +219,79 @@ public class ControllerGUI implements Initializable {
 	}
 
 	public void disconnect() throws RemoteException {
-		myConnection.disconnect(labelPseudo.getText());
-		hboxConnect.setVisible(true);
-		labelConnected.setVisible(false);
-		labelPseudo.setText("");
-		paneActions.setVisible(false);
-		bpMessages.setVisible(false);
-		listMessages.getItems().clear();
-		labelRecipient.setText("");
-		System.out.println("Disconnected");
+		if(myConnection!=null) {
+			myConnection.disconnect(labelPseudo.getText());
+			//hboxConnect.setVisible(true);
+			//labelConnected.setVisible(false);
+			//paneActions.setVisible(false);
+			bpMessages.setVisible(false);
+			listMessages.getItems().clear();
+			labelRecipient.setText("");
+			animationDisconnect();
+		}else {
+			System.exit(0);
+		}
 	}
 
 	public void close() throws RemoteException {
-		myConnection.disconnect(labelPseudo.getText());
+		if(myConnection!=null) {
+			myConnection.disconnect(labelPseudo.getText());
+		}
 		System.exit(0);
 	}
 	
-	public void test() throws RemoteException {
-		System.out.println(myReceiver.getMailbox());
+	public void animationConnect() {
+        animationConnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(hboxConnect.getOpacity()>0) {
+                	hboxConnect.setOpacity(hboxConnect.getOpacity()-0.02);
+                }else {
+                	if(paneActions.getOpacity()<1) {
+                		hboxLabel.setOpacity(hboxLabel.getOpacity()+0.02);
+                		paneActions.setOpacity(paneActions.getOpacity()+0.02);
+                	}else {
+                		animationConnect.stop();
+                	}
+                }
+            }
+        }));
+        animationConnect.setCycleCount(Timeline.INDEFINITE);
+        animationConnect.play();
+	}
+	
+	public void animationDisconnect() {
+         animationDisconnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	if(paneActions.getOpacity()>0) {
+            		hboxLabel.setOpacity(hboxLabel.getOpacity()-0.02);
+            		paneActions.setOpacity(paneActions.getOpacity()-0.02);
+            	}else {
+                    if(hboxConnect.getOpacity()<1) {
+                    	hboxConnect.setOpacity(hboxConnect.getOpacity()+0.02);
+                    }else {
+                    	labelPseudo.setText("");
+                    	animationDisconnect.stop();
+                    }
+            	}
+            }
+        }));
+        animationDisconnect.setCycleCount(Timeline.INDEFINITE);
+        animationDisconnect.play();
+	}
+	
+	public void changeIP() throws IOException {
+		Stage stage = new Stage();
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setResizable(false);
+		Parent root = FXMLLoader.load(Client.class.getResource("ChangeIP.fxml"));
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
+		stage.setScene(scene);
+		stage.setTitle("Change server IP adress");
+		stage.getIcons().add(new Image(new FileInputStream(Client.class.getResource("../css/options.png").getPath())));
+		stage.show();
 	}
 
 }

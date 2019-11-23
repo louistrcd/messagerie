@@ -20,6 +20,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#disconnect" text="Disconnect" />
+                  <MenuItem mnemonicParsing="false" onAction="#changeIP" text="Set IP adress" />
             </items>
           </Menu>
         </menus>
@@ -42,7 +43,7 @@
                         <Insets left="-20.0" top="5.0" />
                      </HBox.margin>
                   </HBox>
-                  <HBox spacing="8.0">
+                  <HBox fx:id="hboxLabel" opacity="0.0" spacing="8.0">
                      <HBox.margin>
                         <Insets left="50.0" top="4.0" />
                      </HBox.margin>
@@ -62,7 +63,7 @@
             </HBox>
          </top>
          <center>
-            <BorderPane fx:id="paneActions" prefHeight="200.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
+            <BorderPane fx:id="paneActions" opacity="0.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <center>
                   <ListView fx:id="listClients" fixedCellSize="30.0" prefHeight="130.0" prefWidth="888.0" BorderPane.alignment="CENTER" />
                </center>
@@ -106,7 +107,6 @@
                                     <Insets top="6.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#test" text="Button" />
                            </children>
                            <BorderPane.margin>
                               <Insets bottom="20.0" top="40.0" />
