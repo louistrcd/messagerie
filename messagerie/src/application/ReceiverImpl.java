@@ -10,63 +10,76 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ReceiverImpl extends UnicastRemoteObject implements Receiver{
-	
+public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
+
 	ObservableList<String> connected = FXCollections.observableArrayList();
 	ObservableList<String> messages = FXCollections.observableArrayList();
 	HashMap<String, ObservableList<String>> mailbox = new HashMap<String, ObservableList<String>>();
 	ControllerGUI controller;
-	
+
 	public ReceiverImpl() throws RemoteException {
 		super();
 	}
-	
-	public void setController(ControllerGUI controller) {
+
+	public void setController(ControllerGUI controller, String pseudo) {
 		this.controller = controller;
 	}
-	
+
 	@Override
-	public ObservableList<String> getMessages(){
+	public ObservableList<String> getMessages() {
 		return messages;
 	}
-	
+
 	@Override
-	public ObservableList<String> getClients(){
+	public ObservableList<String> getClients() {
 		return connected;
 	}
-	
-	public ObservableList<String> getMailbox(String pseudo){
+
+	public ObservableList<String> getMailbox(String pseudo) {
 		return mailbox.get(pseudo);
 	}
-	
+
 	@Override
-	public void receive(String from, String text) throws IllegalStateException{
-		if(mailbox.get(from)==null) {
-			ObservableList<String> messagesFrom = FXCollections.observableArrayList();
-			messagesFrom.add(text);
-			mailbox.put(from, messagesFrom);
-		}else {
-			mailbox.get(from).add(text);
-		}
-		Platform.runLater(new Runnable(){
+	public void receive(String from, String text){
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-
+				if (mailbox.get(from) == null) {
+					ObservableList<String> messagesFrom = FXCollections.observableArrayList();
+					messagesFrom.add(text);
+					mailbox.put(from, messagesFrom);
+				} else {
+					mailbox.get(from).add(text);
+				}
 			}
-			});
-
+		});
+	}
+	
+	public void initMailbox(String pseudo) {
+		ObservableList<String> test = FXCollections.observableArrayList();
+		test.add("Bienvenue dans le chat");
+		mailbox.put(pseudo, test);
 	}
 
 	@Override
 	public void initClients(List<String> Clients) {
-		connected.clear();
-		connected.addAll(Clients);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				connected.clear();
+				connected.addAll(Clients);
+				for(String s : Clients) {
+					initMailbox(s);
+				}
+			}
+		});
+
 	}
 
 	@Override
 	public void addClient(String client) {
 		connected.add(client);
-		
+
 	}
 
 	@Override

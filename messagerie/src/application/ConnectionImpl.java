@@ -44,17 +44,18 @@ public class ConnectionImpl extends UnicastRemoteObject implements Connection {
 				for(Map.Entry<String, Receiver> tupple : receivers.entrySet()) {
 					tupple.getValue().initClients(connected);
 				}
-				System.out.println("Receivers size " + receivers.size());
 			}
-			
 		}
 		return emitter;
 	}
 
 	@Override
-	public void disconnect(String pseudo) {
+	public void disconnect(String pseudo) throws RemoteException {
 		connected.remove(pseudo);
 		receivers.remove(pseudo);
+		for(Map.Entry<String, Receiver> tupple : receivers.entrySet()) {
+			tupple.getValue().initClients(connected);
+		}
 	}
 	
 }

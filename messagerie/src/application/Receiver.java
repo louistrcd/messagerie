@@ -7,7 +7,8 @@ import java.util.List;
 import javafx.collections.ObservableList;
 
 public interface Receiver extends Remote {
-	void setController(ControllerGUI controller) throws RemoteException;
+	void initMailbox(String client) throws RemoteException;
+	void setController(ControllerGUI controller, String pseudo) throws RemoteException;
 	ObservableList<String> getMessages() throws RemoteException;
 	ObservableList<String> getClients() throws RemoteException;
 	ObservableList<String> getMailbox(String pseudo) throws RemoteException;

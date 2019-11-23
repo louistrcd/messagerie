@@ -20,7 +20,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -30,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 public class ControllerGUI implements Initializable {
@@ -37,7 +40,7 @@ public class ControllerGUI implements Initializable {
 	Connection myConnection;
 	Emitter myEmitter;
 	Receiver myReceiver;
-	
+
 	@FXML
 	TextField pseudo;
 	@FXML
@@ -49,17 +52,17 @@ public class ControllerGUI implements Initializable {
 	@FXML
 	HBox hboxConnect;
 	@FXML
+	BorderPane bpMessages;
+	@FXML
 	BorderPane paneActions;
 	@FXML
 	ListView<String> listClients;
 	@FXML
 	ListView<String> listMessages;
 	@FXML
-	ListView<String> listMessagesEnvoyes;
-	@FXML
 	TextArea message;
 	ObservableList<String> myMessages = FXCollections.observableArrayList();
-	
+
 	public ControllerGUI(Connection myConnection) throws RemoteException {
 		this.myConnection = myConnection;
 	}
@@ -69,8 +72,7 @@ public class ControllerGUI implements Initializable {
 	}
 
 	public void initListView() throws RemoteException {
-			listClients.setItems(myReceiver.getClients());
-			listClients.setOnMousePressed(new EventHandler<MouseEvent>() {
+		listClients.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
@@ -78,7 +80,7 @@ public class ControllerGUI implements Initializable {
 					if (ligne != null) {
 						labelRecipient.setText(ligne);
 						try {
-							myReceiver.receive(labelRecipient.getText(), "");
+							bpMessages.setVisible(true);
 							initListMessages(ligne);
 						} catch (RemoteException e) {
 							e.printStackTrace();
@@ -87,48 +89,63 @@ public class ControllerGUI implements Initializable {
 				}
 			}
 		});
+
 	}
 	
-	
+	public class YourFormatCell extends ListCell<String> {
+	    @Override 
+	    protected void updateItem(String item, boolean empty) {
+	        super.updateItem(item, empty);
+	        if(item!=null) {
+	        	setText(item);
+		        if(item.contains("You")) {
+		        	setStyle("-fx-text-fill: white; -fx-background-color: #0099ff;");
+		        }else if(item.contains("Bienvenue")) {
+		        	setStyle("-fx-text-fill: #ffb700; -fx-background-color: #2e2e2e;");
+		        }else {
+		        	setStyle("-fx-text-fill: white; -fx-background-color: #2e2e2e;");
+		        }
+	        }
+
+	    }
+	}
 
 	public void initListMessages(String recipient) throws RemoteException {
-		if(listMessages == null) {
-			listMessages = new ListView();
-		}		
+		listMessages.refresh();
+		listMessages.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+		    @Override 
+		    public ListCell<String> call(ListView<String> list) {
+		        return new YourFormatCell();
+		    }
+		});
+		listMessages.refresh();
 		listMessages.setItems(myReceiver.getMailbox(recipient));
-//		myReceiver.getMessages().addListener(new ListChangeListener<String>() {
-//		    @Override
-//		    public void onChanged(ListChangeListener.Change<? extends String> change) {
-//		        while (change.next()) {
-//		        	for(String s : (ObservableList<String>) change) {
-//		        		if(s.contains(recipient)) {
-//		        			listMessages.getItems().add(s);
-//		        		}
-//		        	}
-//		        }
-//		    }
-//		});	
-
+		listMessages.refresh();
 	}
 
 	public void connect() {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
 				myReceiver = new ReceiverImpl();
-				myReceiver.setController(this);
+				myReceiver.setController(this, pseudo.getText());
 				myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
-				if(myEmitter == null) {
+				if (myEmitter == null) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Connection error");
 					alert.setContentText("Pseudo already connected in a session");
 					alert.show();
-				}else {
+				} else {
 					myEmitter.setMyConnection(myConnection);
 					System.out.println("Your are connected as " + pseudo.getText());
 					labelConnected.setVisible(true);
 					labelPseudo.setText(pseudo.getText());
 					pseudo.setText("");
 					hboxConnect.setVisible(false);
+					listClients.setItems(myReceiver.getClients());
+					for(String s : myReceiver.getClients()) {
+						myReceiver.initMailbox(s);
+						System.out.println(s);
+					}
 					initListView();
 					paneActions.setVisible(true);
 				}
@@ -145,27 +162,10 @@ public class ControllerGUI implements Initializable {
 		}
 	}
 
-	public void newMessage() {
-		try {
-			Stage stage = new Stage();
-			stage.initModality(Modality.APPLICATION_MODAL);
-			FXMLLoader loader = new FXMLLoader(Client.class.getResource("NewMessage.fxml"));
-			ControllerNewMessage controller = new ControllerNewMessage(labelPseudo.getText(), myConnection, myEmitter);
-			loader.setController(controller);
-			Scene scene = new Scene(loader.load(), 500, 400);
-			scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
-			stage.setScene(scene);
-			stage.setTitle("New message");
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void sendMessage() throws RemoteException {
-			myEmitter.sendMessage(labelRecipient.getText(), message.getText());
-			myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
-			message.setText("");
+		myEmitter.sendMessage(labelRecipient.getText(), message.getText());
+		myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
+		message.setText("");
 	}
 
 	public void disconnect() throws RemoteException {
@@ -182,6 +182,10 @@ public class ControllerGUI implements Initializable {
 	public void close() throws RemoteException {
 		myConnection.disconnect(labelPseudo.getText());
 		System.exit(0);
+	}
+	
+	public String getPseudo() {
+		return labelPseudo.getText();
 	}
 
 }

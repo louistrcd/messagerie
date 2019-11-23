@@ -81,7 +81,7 @@
                   </HBox>
                </top>
                <bottom>
-                  <BorderPane prefHeight="246.0" prefWidth="888.0" BorderPane.alignment="CENTER">
+                  <BorderPane fx:id="bpMessages" prefHeight="300.0" prefWidth="888.0" visible="false" BorderPane.alignment="CENTER">
                      <top>
                         <Label fx:id="labelRecipient" style="-fx-text-fill: #03e3fc;" BorderPane.alignment="CENTER" />
                      </top>
@@ -89,27 +89,27 @@
                         <Insets top="40.0" />
                      </BorderPane.margin>
                      <center>
-                        <ListView fx:id="listMessages" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <ListView fx:id="listMessages" prefHeight="214.0" prefWidth="888.0" BorderPane.alignment="CENTER" />
                      </center>
+                     <bottom>
+                        <HBox spacing="30.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" />
+                              <Button fx:id="buttonSendMessage" mnemonicParsing="false" onAction="#sendMessage" text="Send message">
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="20.0" top="50.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </bottom>
                   </BorderPane>
                </bottom>
             </BorderPane>
          </center>
-         <bottom>
-            <HBox spacing="30.0" BorderPane.alignment="CENTER">
-               <children>
-                  <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" />
-                  <Button mnemonicParsing="false" onAction="#sendMessage" text="Send message">
-                     <HBox.margin>
-                        <Insets top="5.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-               <BorderPane.margin>
-                  <Insets bottom="20.0" />
-               </BorderPane.margin>
-            </HBox>
-         </bottom>
       </BorderPane>
    </center>
    <left>
