@@ -32,16 +32,9 @@ public class Client extends Application{
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-//		try {
-//			myConnection = (Connection) Naming.lookup("rmi://"+ipAdress+"/Connection");
-//		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-//			e.printStackTrace();
-//		}
-		try {
-			if(myConnection==null) {
 				Stage stage = new Stage();
 				FXMLLoader loader = new FXMLLoader(Client.class.getResource("GUI.fxml"));
-				ControllerGUI controller = new ControllerGUI(null);
+				ControllerGUI controller = new ControllerGUI();
 				loader.setController(controller);
 				Scene scene = new Scene(loader.load());
 				scene.getStylesheets().add(Client.class.getResource("../css/styleAnalyse.css").toExternalForm());
@@ -59,15 +52,13 @@ public class Client extends Application{
 				stage.setOpacity(0);
 				stage.show();
 				startAnimation(stage);
-			}else {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText("No server found at " + "rmi://localhost/Connection");
-				alert.setTitle("Server connection error");
-				alert.show();
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+//			else {
+//				Alert alert = new Alert(AlertType.ERROR);
+//				alert.setContentText("No server found at " + "rmi://localhost/Connection");
+//				alert.setTitle("Server connection error");
+//				alert.show();
+//			}
+
 	}
 	
 	public void startAnimation(Stage stage) {		

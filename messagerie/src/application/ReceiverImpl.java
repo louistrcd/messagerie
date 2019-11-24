@@ -12,14 +12,9 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 
 	ObservableList<String> connected = FXCollections.observableArrayList();
 	HashMap<String, ObservableList<String>> mailbox = new HashMap<String, ObservableList<String>>();
-	ControllerGUI controller;
 
 	public ReceiverImpl() throws RemoteException {
 		super();
-	}
-
-	public void setController(ControllerGUI controller, String pseudo) {
-		this.controller = controller;
 	}
 
 	@Override

@@ -67,15 +67,14 @@ public class ControllerGUI implements Initializable {
 	Timeline animationConnect;
 	Timeline animationDisconnect;
 
-	public ControllerGUI(Connection myConnection) throws RemoteException {
-		this.myConnection = myConnection;
+	public ControllerGUI() throws RemoteException {
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		addEnterActions();
 	}
-	
+
 	public void addEnterActions() {
 		pseudo.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -99,7 +98,7 @@ public class ControllerGUI implements Initializable {
 				}
 			}
 		});
-		
+
 		message.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
@@ -160,7 +159,7 @@ public class ControllerGUI implements Initializable {
 		});
 		listMessages.refresh();
 		listMessages.setItems(myReceiver.getMailbox(recipient));
-		listMessages.scrollTo(listMessages.getItems().size()-1);
+		listMessages.scrollTo(listMessages.getItems().size() - 1);
 		listMessages.refresh();
 	}
 
@@ -168,17 +167,16 @@ public class ControllerGUI implements Initializable {
 		if (!(pseudo.getText().length() <= 3)) {
 			try {
 				myReceiver = new ReceiverImpl();
-				myReceiver.setController(this, pseudo.getText());
 				try {
-					myConnection = (Connection) Naming.lookup("rmi://"+Client.ipAdress + "/Connection");
+					myConnection = (Connection) Naming.lookup("rmi://" + Client.ipAdress + "/Connection");
 				} catch (MalformedURLException | RemoteException | NotBoundException e) {
 					e.printStackTrace();
 					Alert alert = new Alert(AlertType.ERROR);
-					alert.setContentText("No server found at " + "rmi://" + Client.ipAdress +  "/Connection");
+					alert.setContentText("No server found at " + "rmi://" + Client.ipAdress + "/Connection");
 					alert.setTitle("Server connection error");
 					alert.show();
 				}
-				if(myConnection!=null) {
+				if (myConnection != null) {
 					myEmitter = myConnection.connect(pseudo.getText(), myReceiver);
 					if (myEmitter == null) {
 						Alert alert = new Alert(AlertType.ERROR);
@@ -198,7 +196,6 @@ public class ControllerGUI implements Initializable {
 						animationConnect();
 					}
 				}
-
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -214,73 +211,70 @@ public class ControllerGUI implements Initializable {
 		myEmitter.sendMessage(labelRecipient.getText(), message.getText());
 		myReceiver.receive(labelRecipient.getText(), "You : " + message.getText());
 		message.setText("");
-		listMessages.scrollTo(listMessages.getItems().size()-1);
+		listMessages.scrollTo(listMessages.getItems().size() - 1);
 		listMessages.refresh();
 	}
 
 	public void disconnect() throws RemoteException {
-		if(myConnection!=null) {
+		if (myConnection != null) {
 			myConnection.disconnect(labelPseudo.getText());
-			//hboxConnect.setVisible(true);
-			//labelConnected.setVisible(false);
-			//paneActions.setVisible(false);
 			bpMessages.setVisible(false);
 			listMessages.getItems().clear();
 			labelRecipient.setText("");
 			animationDisconnect();
-		}else {
+		} else {
 			System.exit(0);
 		}
 	}
 
 	public void close() throws RemoteException {
-		if(myConnection!=null) {
+		if (myConnection != null) {
 			myConnection.disconnect(labelPseudo.getText());
 		}
 		System.exit(0);
 	}
-	
+
 	public void animationConnect() {
-        animationConnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(hboxConnect.getOpacity()>0) {
-                	hboxConnect.setOpacity(hboxConnect.getOpacity()-0.02);
-                }else {
-                	if(paneActions.getOpacity()<1) {
-                		hboxLabel.setOpacity(hboxLabel.getOpacity()+0.02);
-                		paneActions.setOpacity(paneActions.getOpacity()+0.02);
-                	}else {
-                		animationConnect.stop();
-                	}
-                }
-            }
-        }));
-        animationConnect.setCycleCount(Timeline.INDEFINITE);
-        animationConnect.play();
+		animationConnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (hboxConnect.getOpacity() > 0) {
+					hboxConnect.setOpacity(hboxConnect.getOpacity() - 0.02);
+				} else {
+					if (paneActions.getOpacity() < 1) {
+						hboxLabel.setOpacity(hboxLabel.getOpacity() + 0.02);
+						paneActions.setOpacity(paneActions.getOpacity() + 0.02);
+					} else {
+						animationConnect.stop();
+					}
+				}
+			}
+		}));
+		animationConnect.setCycleCount(Timeline.INDEFINITE);
+		animationConnect.play();
 	}
-	
+
 	public void animationDisconnect() {
-         animationDisconnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	if(paneActions.getOpacity()>0) {
-            		hboxLabel.setOpacity(hboxLabel.getOpacity()-0.02);
-            		paneActions.setOpacity(paneActions.getOpacity()-0.02);
-            	}else {
-                    if(hboxConnect.getOpacity()<1) {
-                    	hboxConnect.setOpacity(hboxConnect.getOpacity()+0.02);
-                    }else {
-                    	labelPseudo.setText("");
-                    	animationDisconnect.stop();
-                    }
-            	}
-            }
-        }));
-        animationDisconnect.setCycleCount(Timeline.INDEFINITE);
-        animationDisconnect.play();
+		animationDisconnect = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (paneActions.getOpacity() > 0) {
+					hboxLabel.setOpacity(hboxLabel.getOpacity() - 0.02);
+					paneActions.setOpacity(paneActions.getOpacity() - 0.02);
+				} else {
+					if (hboxConnect.getOpacity() < 1) {
+						hboxConnect.setOpacity(hboxConnect.getOpacity() + 0.02);
+					} else {
+						labelPseudo.setText("");
+						animationDisconnect.stop();
+					}
+				}
+			}
+		}));
+		animationDisconnect.setCycleCount(Timeline.INDEFINITE);
+		animationDisconnect.play();
 	}
-	
+
 	public void changeIP() throws IOException {
 		Stage stage = new Stage();
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -291,6 +285,7 @@ public class ControllerGUI implements Initializable {
 		stage.setScene(scene);
 		stage.setTitle("Change server IP adress");
 		stage.getIcons().add(new Image(new FileInputStream(Client.class.getResource("../css/options.png").getPath())));
+		stage.centerOnScreen();
 		stage.show();
 	}
 

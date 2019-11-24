@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="344.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControllerChangeIP">
    <top>
       <Label fx:id="labelIP" style="-fx-font-size: 20; -fx-text-fill: #03e3fc;" text="Label" BorderPane.alignment="CENTER">
@@ -24,7 +23,7 @@
                   <Insets left="130.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#change" text="Change" />
+            <Button fx:id="button" mnemonicParsing="false" onAction="#change" text="Change" />
          </children>
          <BorderPane.margin>
             <Insets top="50.0" />

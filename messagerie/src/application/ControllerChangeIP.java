@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -17,10 +18,15 @@ public class ControllerChangeIP implements Initializable{
 	Label labelIP;
 	@FXML
 	TextField textField;
+	@FXML
+	Button button;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		labelIP.setText(Client.ipAdress);
+		textField.setText(labelIP.getText());
+		textField.selectEnd();
+		button.requestFocus();
 		textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
@@ -29,6 +35,7 @@ public class ControllerChangeIP implements Initializable{
 				}
 			}
 		});
+		textField.selectEnd();
 	}
 	
 	@FXML
@@ -37,5 +44,7 @@ public class ControllerChangeIP implements Initializable{
 		Client.ipAdress = textField.getText();
 		textField.setText("");
 	}
+	
+	
 
 }
