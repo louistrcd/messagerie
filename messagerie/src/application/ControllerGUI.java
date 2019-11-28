@@ -64,6 +64,7 @@ public class ControllerGUI implements Initializable {
 	ListView<String> listMessages;
 	@FXML
 	TextArea message;
+	
 	Timeline animationConnect;
 	Timeline animationDisconnect;
 

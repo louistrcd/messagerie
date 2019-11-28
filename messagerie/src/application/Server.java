@@ -9,22 +9,12 @@ public class Server {
 
 	public static void main(String[] args) {
 		try {
-			// registry creation
 			LocateRegistry.createRegistry(1099);
-			
-			// component instanciation and implicit activation
-			
 			ConnectionImpl myConnection = new ConnectionImpl();
-			
 			System.out.println(myConnection.getRef().remoteToString());
-			
-			//publication of component reference in the registry
 			Naming.rebind("Connection", myConnection);
-			
 			System.out.println("Serveur actif");
-			
 		} catch (RemoteException | MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

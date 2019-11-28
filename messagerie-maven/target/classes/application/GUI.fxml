@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane prefHeight="611.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#disconnect" text="Disconnect" />
+                  <MenuItem mnemonicParsing="false" onAction="#changeIP" text="Set IP adress" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <BorderPane BorderPane.alignment="CENTER">
+         <top>
+            <HBox spacing="30.0">
+               <children>
+                  <HBox fx:id="hboxConnect" spacing="15.0">
+                     <children>
+                        <TextField fx:id="pseudo" promptText="Enter your pseudo" />
+                        <Button mnemonicParsing="false" onAction="#connect" prefHeight="26.0" prefWidth="77.0" text="Connect">
+                           <HBox.margin>
+                              <Insets top="2.0" />
+                           </HBox.margin></Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="-20.0" top="5.0" />
+                     </HBox.margin>
+                  </HBox>
+                  <HBox fx:id="hboxLabel" opacity="0.0" spacing="8.0">
+                     <HBox.margin>
+                        <Insets left="50.0" top="4.0" />
+                     </HBox.margin>
+                     <children>
+                        <Label fx:id="labelConnected" style="-fx-font-size: 18;" text="Connected as : " visible="false" />
+                        <Label fx:id="labelPseudo" style="-fx-text-fill: #03e3fc; -fx-font-size: 18;">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets left="28.0" top="11.0" />
+               </BorderPane.margin>
+            </HBox>
+         </top>
+         <center>
+            <BorderPane fx:id="paneActions" opacity="0.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <center>
+                  <ListView fx:id="listClients" fixedCellSize="30.0" prefHeight="130.0" prefWidth="888.0" BorderPane.alignment="CENTER" />
+               </center>
+               <BorderPane.margin>
+                  <Insets bottom="11.0" top="25.0" />
+               </BorderPane.margin>
+               <top>
+                  <HBox spacing="60.0" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="6.0" />
+                     </BorderPane.margin>
+                     <children>
+                        <Label text="Clients connected">
+                           <HBox.margin>
+                              <Insets bottom="3.0" left="4.0" top="4.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </top>
+               <bottom>
+                  <BorderPane fx:id="bpMessages" prefHeight="313.0" prefWidth="888.0" visible="false" BorderPane.alignment="CENTER">
+                     <top>
+                        <Label fx:id="labelRecipient" style="-fx-text-fill: #03e3fc; -fx-font-size: 18;" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" />
+                           </BorderPane.margin></Label>
+                     </top>
+                     <BorderPane.margin>
+                        <Insets top="30.0" />
+                     </BorderPane.margin>
+                     <center>
+                        <ListView fx:id="listMessages" prefHeight="202.0" prefWidth="888.0" style="-fx-background-color: #2e2e2e;" BorderPane.alignment="CENTER" />
+                     </center>
+                     <bottom>
+                        <HBox spacing="30.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextArea fx:id="message" prefHeight="32.0" prefWidth="478.0" promptText="Write message here" style="-fx-control-inner-background: #2e2e2e;" wrapText="true" />
+                              <Button fx:id="buttonSendMessage" mnemonicParsing="false" onAction="#sendMessage" text="Send message">
+                                 <HBox.margin>
+                                    <Insets top="6.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets bottom="20.0" top="40.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </bottom>
+                  </BorderPane>
+               </bottom>
+            </BorderPane>
+         </center>
+      </BorderPane>
+   </center>
+   <left>
+      <Pane prefHeight="541.0" prefWidth="16.0" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <Pane prefHeight="541.0" prefWidth="28.0" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>

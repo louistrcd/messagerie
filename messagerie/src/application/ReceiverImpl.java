@@ -62,12 +62,10 @@ public class ReceiverImpl extends UnicastRemoteObject implements Receiver {
 				}
 			}
 		});
-
 	}
 
 	@Override
 	public HashMap<String, ObservableList<String>> getMailbox() throws RemoteException {
-		
 		return mailbox;
 	}
 
